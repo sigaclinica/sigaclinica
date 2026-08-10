@@ -1211,11 +1211,45 @@
 
   <script>
     // Menu mobile
-    const menuToggle = document.getElementById('menuToggle');
-    const nav = document.getElementById('nav');
-    menuToggle.addEventListener('click', () => {
-      nav.classList.toggle('open');
-    });
+const menuToggle = document.getElementById('menuToggle');
+const nav = document.getElementById('nav');
+
+function closeMenu() {
+  nav.classList.remove('open');
+}
+
+function toggleMenu() {
+  nav.classList.toggle('open');
+}
+
+// Abrir / fechar pelo ícone
+menuToggle.addEventListener('click', (e) => {
+  e.stopPropagation(); // evita que o clique no botão dispare o "clique fora"
+  toggleMenu();
+});
+
+// Fechar ao clicar em qualquer link ou botão dentro do menu
+nav.querySelectorAll('a, button[type="submit"]').forEach(el => {
+  el.addEventListener('click', () => {
+    // Pequeno delay só para links âncora (#) terem tempo de rolar
+    setTimeout(closeMenu, 50);
+  });
+});
+
+// Fechar ao clicar fora do menu
+document.addEventListener('click', (e) => {
+  const isClickInsideNav = nav.contains(e.target);
+  const isClickOnToggle = menuToggle.contains(e.target);
+
+  if (nav.classList.contains('open') && !isClickInsideNav && !isClickOnToggle) {
+    closeMenu();
+  }
+});
+
+// Fechar também ao apertar ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeMenu();
+});
 
     // Carousels automáticos
     document.querySelectorAll('[data-carousel]').forEach(carousel => {
