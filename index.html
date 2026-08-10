@@ -831,6 +831,60 @@
         width: 100%;
       }
     }
+
+/* ========== LOGIN NO MENU ========== */
+.login-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 16px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  width: 140px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.login-input::placeholder {
+  color: var(--text-muted);
+}
+
+.login-input:focus {
+  border-color: var(--gold);
+  background: rgba(201, 162, 39, 0.08);
+}
+
+.login-btn {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .login-form {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .login-input {
+    width: 100%;
+    text-align: center;
+  }
+
+  .login-btn {
+    width: 100%;
+  }
+}
+    
   </style>
 </head>
 <body>
@@ -842,11 +896,26 @@
       <img src="img/logo.png" alt="SiGA" style="height: 48px; width: auto;">
       </a>
       <nav class="nav" id="nav">
-        <a href="#modulos">Módulos</a>
-        <a href="#combo">Combo</a>
-        <a href="#contato">Contato</a>
-        <a href="https://wa.me/5518988092571?text=Olá! Quero conhecer o SIGA" class="btn btn-gold" target="_blank" rel="noopener">Falar no WhatsApp</a>
-      </nav>
+  <a href="#modulos">Módulos</a>
+  <a href="#combo">Combo</a>
+  <a href="#contato">Contato</a>
+
+  <!-- CAMPO DE LOGIN POR NICKNAME -->
+  <form class="login-form" id="loginForm" onsubmit="return handleLogin(event)">
+    <input 
+      type="text" 
+      id="nickInput" 
+      class="login-input" 
+      placeholder="Seu nickname" 
+      autocomplete="username"
+      required
+      maxlength="40"
+    >
+    <button type="submit" class="btn btn-outline login-btn">Entrar</button>
+  </form>
+
+  <a href="https://wa.me/5518988092571?text=Olá! Quero conhecer o SIGA" class="btn btn-gold" target="_blank" rel="noopener">Falar no WhatsApp</a>
+</nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     </div>
   </header>
@@ -1179,6 +1248,27 @@
         goTo(current);
       }, 4000);
     });
+
+
+function handleLogin(e) {
+  e.preventDefault();
+
+  const input = document.getElementById('nickInput');
+  let nick = input.value.trim().toLowerCase();
+
+  // Remove espaços e caracteres perigosos (só permite letras, números, _ e -)
+  nick = nick.replace(/[^a-z0-9_-]/g, '');
+
+  if (!nick) {
+    input.focus();
+    return false;
+  }
+
+  // Monta e redireciona
+  window.location.href = `https://sigaclinica.com.br/${nick}/entrar`;
+  return false;
+}
+    
   </script>
 </body>
 </html>
