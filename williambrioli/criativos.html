@@ -1253,7 +1253,6 @@ function verificarSessao() {
     document.getElementById("mainApp").classList.remove("hidden");
   }
 }
-
 async function tentarLogin() {
   const senha = document.getElementById("loginPassword").value.trim();
   const erroEl = document.getElementById("loginError");
@@ -1271,10 +1270,14 @@ async function tentarLogin() {
   try {
     const resposta = await fetch(URL_LOGIN, {
       method: "POST",
-      body: JSON.stringify({ senha: senha })
+      body: JSON.stringify({ senha: senha }),
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"   // ← importante para evitar o erro de CORS
+      }
     });
 
-    const dados = await resposta.json();
+    const texto = await resposta.text();
+    const dados = JSON.parse(texto);
 
     if (dados.success) {
       sessionStorage.setItem("biblioteca_logado", "sim");
