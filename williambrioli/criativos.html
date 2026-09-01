@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Biblioteca de Comandos para Criativos</title>
+<style>
+:root{
+  --bg:#f0f2f5; --panel:#fff; --panel2:#f8fafc; --text:#0f172a; --muted:#64748b;
+  --line:#e2e8f0; --accent:#2563eb; --accent2:#1d4ed8; --soft:#eff6ff;
+  --success:#059669; --danger:#dc2626; --warn:#d97706;
+  --shadow:0 4px 24px rgba(15,23,42,.06); --radius:16px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex;flex-direction:column}
+
+/* Topbar + Steps (sticky juntos) */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1100px;margin:auto;padding:12px 20px 10px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#111827,#334155);color:#fff;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.brand h1{font-size:17px;margin:0;font-weight:800}.brand p{font-size:12px;color:var(--muted);margin:2px 0 0}
+.search{flex:1;min-width:200px;max-width:360px;position:relative}
+.search input{width:100%;padding:11px 14px 11px 40px;border:1px solid var(--line);border-radius:12px;background:#fff;outline:none;transition:.15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.search span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.top-actions button{padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:12px;color:#334155;transition:.15s}
+.top-actions button:hover{background:var(--panel2);border-color:#cbd5e1}
+.top-actions button.active{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+.top-actions .primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.top-actions .primary:hover{background:var(--accent2)}
+
+/* Steps — centralizadas no desktop, compactas no mobile */
+.steps{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 20px 12px;
+  display:flex;
+  gap:8px;
+  flex-wrap:nowrap;
+  justify-content:center;          /* ← centraliza no desktop */
+  overflow-x:visible;
+}
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:#f8fafc;
+  border:1px solid var(--line);
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  flex-shrink:0;
+  white-space:nowrap;
+}
+
+/* Main vertical flow */
+.main{max-width:1100px;margin:0 auto;padding:16px 20px 40px;display:flex;flex-direction:column;gap:18px;flex:1;width:100%}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+/* Categories - horizontal chips */
+.cats-section{padding:14px 16px}
+.cats-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800;margin-bottom:10px}
+.cats-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.cats-row::-webkit-scrollbar{height:4px}
+.cats-row::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+.cat{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:999px;color:#475569;font-size:13px;font-weight:600;transition:.12s;white-space:nowrap}
+.cat:hover{background:var(--panel2);border-color:#cbd5e1}
+.cat.active{background:var(--soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.cat .count{font-size:11px;color:#94a3b8;background:#f1f5f9;padding:2px 7px;border-radius:999px}
+.cat.active .count{background:#dbeafe;color:var(--accent)}
+
+/* Library */
+.library-section{padding:16px}
+.library-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.library-head h2{font-size:16px;margin:0}.library-head small{color:var(--muted);font-size:12px}
+.merge-bar{display:none;align-items:center;gap:10px;padding:10px 14px;background:var(--soft);border:1px solid #bfdbfe;border-radius:12px;flex-wrap:wrap;margin-bottom:12px}
+.merge-bar.show{display:flex}
+.merge-bar span{font-size:12px;font-weight:700;color:var(--accent)}
+.merge-bar button{padding:7px 12px;border-radius:8px;border:0;font-weight:700;font-size:12px}
+.merge-bar .merge-go{background:var(--accent);color:#fff}
+.merge-bar .merge-clear{background:#fff;border:1px solid var(--line);color:#475569}
+
+.command-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.command-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;transition:.15s;position:relative}
+.command-card:hover{border-color:#cbd5e1;box-shadow:0 4px 12px rgba(15,23,42,.04)}
+.command-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.12)}
+.command-card.merge-check{padding-left:42px}
+.card-check{position:absolute;left:12px;top:16px;width:18px;height:18px;accent-color:var(--accent);display:none}
+.command-card.merge-check .card-check{display:block}
+.card-top{display:flex;gap:8px;align-items:flex-start}
+.command-name{font-weight:800;font-size:13px;flex:1;line-height:1.3}
+.star{border:0;background:transparent;font-size:18px;color:#cbd5e1;padding:0;line-height:1}
+.star.on{color:#f59e0b}
+.command-desc{font-size:12px;line-height:1.5;color:var(--muted);margin:6px 0 10px}
+.card-actions{display:flex;gap:6px;flex-wrap:wrap}
+.use-btn,.secondary,.primary,.ghost{border:0;border-radius:9px;padding:8px 11px;font-weight:700;font-size:12px;transition:.12s}
+.use-btn,.primary{background:var(--accent);color:#fff}.use-btn:hover,.primary:hover{background:var(--accent2)}
+.secondary{background:#f1f5f9;color:#334155}.secondary:hover{background:#e2e8f0}
+.ghost{background:transparent;border:1px solid var(--line);color:#475569}.ghost:hover{background:var(--panel2)}
+.badge{background:var(--soft);color:var(--accent);font-weight:800;padding:5px 9px;border-radius:8px;font-size:11px;white-space:nowrap}
+.badge.merged{background:#fef3c7;color:#b45309}
+
+/* Workspace - appears after selection */
+.workspace{display:none;flex-direction:column;gap:16px}
+.workspace.visible{display:flex}
+
+.editor{padding:18px}
+.editor-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}
+.editor-head h2{font-size:16px;margin:0}.editor-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.merged-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.merged-tags .tag{background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:4px}
+.merged-tags .tag button{border:0;background:transparent;color:#b45309;font-size:14px;padding:0 2px;line-height:1}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;font-weight:800;color:#475569;display:flex;align-items:center;gap:6px}
+.field label .hint{font-weight:500;color:#94a3b8;font-size:10px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#fff;color:var(--text);outline:none;transition:.12s}
+.field textarea{min-height:72px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+
+/* Size presets (Canva-like) */
+.size-presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.size-preset{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 8px;text-align:center;transition:.12s;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.size-preset:hover{border-color:#93c5fd;background:var(--soft)}
+.size-preset.active{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 2px rgba(37,99,235,.15)}
+.size-preset .sp-icon{font-size:18px;line-height:1}
+.size-preset .sp-name{font-size:11px;font-weight:700;color:#334155}
+.size-preset .sp-dim{font-size:10px;color:var(--muted)}
+.size-preset.custom-btn.active{border-color:var(--accent)}
+
+.custom-size-box{display:none;margin-top:10px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.custom-size-box.open{display:block}
+.custom-size-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.custom-size-row .field{flex:1;min-width:100px}
+.custom-size-row .x{font-weight:800;color:var(--muted);padding-bottom:10px;font-size:14px}
+.custom-size-row .unit{font-size:11px;color:var(--muted);font-weight:600;padding-bottom:10px}
+
+.upload{border:1.5px dashed #cbd5e1;border-radius:12px;background:#f8fafc;min-height:120px;display:grid;place-items:center;text-align:center;padding:14px;transition:.15s;overflow:hidden}
+.upload.drag{border-color:var(--accent);background:var(--soft)}
+.upload.has-image{display:block;padding:0}
+.upload img{width:100%;height:160px;object-fit:contain;background:#fff;border-radius:10px}
+.upload-content{color:var(--muted);font-size:12px}
+.upload-content strong{display:block;color:#334155;font-size:13px;margin-bottom:4px}
+.file-btn{display:inline-block;margin-top:8px;background:#fff;border:1px solid var(--line);padding:7px 12px;border-radius:8px;font-weight:700;color:#334155;cursor:pointer}
+.image-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px;padding:0 8px 10px}
+.image-actions button{border:0;background:#f1f5f9;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:600px){
+  .options{grid-template-columns:repeat(4,1fr)}
+}
+.chip{
+  display:flex;align-items:flex-start;gap:8px;
+  background:#f8fafc;border:1px solid var(--line);border-radius:12px;
+  padding:10px 12px;font-size:12px;color:#334155;cursor:pointer;
+  transition:.12s;line-height:1.35;min-height:44px;
+}
+.chip:hover{border-color:#cbd5e1;background:#f1f5f9}
+.chip:has(input:checked){background:var(--soft);border-color:#93c5fd;color:var(--accent)}
+.chip input{accent-color:var(--accent);margin-top:2px;flex-shrink:0;width:15px;height:15px}
+.chip span{flex:1}
+.chip strong{display:block;font-size:12px;font-weight:700;margin-bottom:1px}
+.chip em{display:block;font-style:normal;font-size:10px;color:var(--muted);font-weight:500}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+/* Preview */
+.preview{padding:16px;display:flex;flex-direction:column;min-height:320px}
+.preview-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.preview-head h2{font-size:15px;margin:0}.preview-head small{color:var(--muted);font-size:11px}
+.preview-box{flex:1;min-height:200px;background:#0f172a;border-radius:12px;padding:14px;overflow:auto}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+.copy-area{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.copy-row{display:flex;gap:8px}
+.copy-row button{flex:1;padding:11px;border-radius:10px;border:0;font-weight:800;font-size:12px}
+.copy{background:var(--accent);color:#fff}.copy:hover{background:var(--accent2)}
+.copy-img{background:#0f172a;color:#fff}.copy-img:hover{background:#1e293b}
+.help-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.45}
+.help-box strong{display:block;margin-bottom:2px}
+.status{font-size:12px;text-align:center;min-height:18px;font-weight:600;padding:4px}
+.status.ok{color:var(--success)}.status.warn{color:var(--warn)}.status.err{color:var(--danger)}
+
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;background:#fafbfc;font-size:13px}
+
+/* Workspace: Preview sempre abaixo de Montar comando (mais espaço no desktop) */
+.workspace-grid{display:grid;grid-template-columns:1fr;gap:16px}
+
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-backdrop.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:20px;box-shadow:0 25px 60px rgba(0,0,0,.2)}
+.modal h3{margin:0 0 6px;font-size:16px}
+.modal p{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 14px}
+.modal-close{float:right;border:0;background:#f1f5f9;border-radius:8px;padding:6px 9px;font-size:14px}
+.modal .primary{margin-top:4px}
+
+/* Responsive */
+@media(max-width:800px){
+  .topbar-inner{padding:12px 14px}
+  .search{max-width:none;order:3;width:100%}
+  .main{padding:12px 14px 28px}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .steps{
+    padding:0 10px 10px;
+    gap:5px;
+    justify-content:center;
+  }
+  .step{
+    padding:5px 8px;
+    font-size:10px;
+    gap:5px;
+  }
+  .step-num{
+    width:18px;
+    height:18px;
+    font-size:10px;
+  }
+  .size-presets{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+  .command-list{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .brand h1{font-size:14px}.brand p{display:none}
+  .copy-row{flex-direction:column}
+  .card-actions{flex-direction:column}
+  .use-btn,.secondary{width:100%}
+  .custom-size-row{flex-direction:column;align-items:stretch}
+  .custom-size-row .x,.custom-size-row .unit{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-icon">🎨</div>
+      <div>
+        <h1>Biblioteca de Comandos</h1>
+        <p>Monte criativos e copie para IA</p>
+      </div>
+    </div>
+    <div class="search"><span>⌕</span><input id="search" type="search" placeholder="Pesquisar comando, categoria..."></div>
+    <div class="top-actions">
+      <button type="button" id="favoritesBtn">⭐ Favoritos</button>
+      <button type="button" id="mergeModeBtn">🔀 Mesclar</button>
+      <button type="button" class="primary" id="newBtn">＋ Novo</button>
+    </div>
+  </div>
+  <div class="steps" id="steps">
+    <div class="step current" data-step="1"><span class="step-num">1</span> Escolher comando</div>
+    <div class="step" data-step="2"><span class="step-num">2</span> Preencher dados</div>
+    <div class="step" data-step="3"><span class="step-num">3</span> Copiar e colar no ChatGPT</div>
+  </div>
+</header>
+
+<main class="main">
+  <!-- 1. Categorias (topo) -->
+  <section class="panel cats-section">
+    <div class="cats-label">Categorias</div>
+    <div class="cats-row" id="categories"></div>
+  </section>
+
+  <!-- 2. Lista de comandos -->
+  <section class="panel library-section">
+    <div class="library-head">
+      <div>
+        <h2 id="categoryTitle">Todos os comandos</h2>
+        <small id="resultCount"></small>
+      </div>
+    </div>
+    <div class="merge-bar" id="mergeBar">
+      <span id="mergeCount">0 selecionados</span>
+      <button type="button" class="merge-go" id="mergeGo">Mesclar selecionados</button>
+      <button type="button" class="merge-clear" id="mergeClear">Limpar seleção</button>
+    </div>
+    <div class="command-list" id="commandList"></div>
+  </section>
+
+  <!-- 3. Workspace (aparece após escolher comando) -->
+  <div class="workspace" id="workspace">
+    <div class="workspace-grid">
+      <section class="panel editor">
+        <div class="editor-head">
+          <div>
+            <h2>Montar comando</h2>
+            <p>Preencha o que for relevante. O preview atualiza em tempo real.</p>
+          </div>
+          <span class="badge" id="activeCommand">/Selecione</span>
+        </div>
+        <div class="merged-tags" id="mergedTags"></div>
+
+        <div class="form-grid">
+          <!-- TAMANHO ESTILO CANVA -->
+          <div class="field full">
+            <label>Tamanho / formato <span class="hint">escolha um preset ou personalize</span></label>
+            <div class="size-presets" id="sizePresets">
+              <button type="button" class="size-preset" data-w="1080" data-h="1350" data-label="Instagram Post 1080 × 1350 px">
+                <span class="sp-icon">⬜</span>
+                <span class="sp-name">Instagram Post</span>
+                <span class="sp-dim">1080 × 1350</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1080" data-h="1920" data-label="Instagram Story 1080 × 1920 px">
+                <span class="sp-icon">📱</span>
+                <span class="sp-name">Instagram Story</span>
+                <span class="sp-dim">1080 × 1920</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1200" data-h="628" data-label="Facebook / Meta Ad 1200 × 628 px">
+                <span class="sp-icon">📘</span>
+                <span class="sp-name">Facebook Ad</span>
+                <span class="sp-dim">1200 × 628</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1080" data-h="1350" data-label="Instagram Retrato 1080 × 1350 px">
+                <span class="sp-icon">🖼️</span>
+                <span class="sp-name">IG Retrato</span>
+                <span class="sp-dim">1080 × 1350</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1200" data-h="630" data-label="LinkedIn / Open Graph 1200 × 630 px">
+                <span class="sp-icon">💼</span>
+                <span class="sp-name">LinkedIn</span>
+                <span class="sp-dim">1200 × 630</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1280" data-h="720" data-label="YouTube Thumbnail 1280 × 720 px">
+                <span class="sp-icon">▶️</span>
+                <span class="sp-name">YouTube</span>
+                <span class="sp-dim">1280 × 720</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1920" data-h="1080" data-label="Banner Web / Full HD 1920 × 1080 px">
+                <span class="sp-icon">🖥️</span>
+                <span class="sp-name">Banner Web</span>
+                <span class="sp-dim">1920 × 1080</span>
+              </button>
+              <button type="button" class="size-preset" data-w="1200" data-h="450" data-label="Website Hero 1200 × 450 px">
+                <span class="sp-icon">🌐</span>
+                <span class="sp-name">Website Hero</span>
+                <span class="sp-dim">1200 × 450</span>
+              </button>
+              <button type="button" class="size-preset" data-w="2480" data-h="3508" data-label="A4 Retrato 2480 × 3508 px (300dpi)">
+                <span class="sp-icon">📄</span>
+                <span class="sp-name">A4 Retrato</span>
+                <span class="sp-dim">2480 × 3508</span>
+              </button>
+              <button type="button" class="size-preset" data-w="3508" data-h="2480" data-label="A4 Paisagem 3508 × 2480 px (300dpi)">
+                <span class="sp-icon">📄</span>
+                <span class="sp-name">A4 Paisagem</span>
+                <span class="sp-dim">3508 × 2480</span>
+              </button>
+              <button type="button" class="size-preset custom-btn" id="customSizeBtn" data-custom="1">
+                <span class="sp-icon">✏️</span>
+                <span class="sp-name">Personalizado</span>
+                <span class="sp-dim">Largura × Altura</span>
+              </button>
+            </div>
+            <div class="custom-size-box" id="customSizeBox">
+              <div class="custom-size-row">
+                <div class="field">
+                  <label>Largura</label>
+                  <input type="number" id="sizeW" min="1" max="10000" placeholder="Ex.: 1080" inputmode="numeric">
+                </div>
+                <span class="x">×</span>
+                <div class="field">
+                  <label>Altura</label>
+                  <input type="number" id="sizeH" min="1" max="10000" placeholder="Ex.: 1080" inputmode="numeric">
+                </div>
+                <span class="unit">px</span>
+              </div>
+            </div>
+            <!-- hidden field that stores the final size string used by the rest of the app -->
+            <input type="hidden" id="size" value="">
+          </div>
+
+          <div class="field full">
+            <label>Objetivo</label>
+            <input id="objective" placeholder="Ex.: banner para página inicial">
+          </div>
+          <div class="field full">
+            <label>Público-alvo</label>
+            <input id="audience" placeholder="Ex.: clientes, gestores...">
+          </div>
+          <div class="field full">
+            <label>Produto / serviço</label>
+            <input id="product" placeholder="Nome ou descrição">
+          </div>
+          <div class="field full">
+            <label>Marca / identidade</label>
+            <input id="brand" placeholder="Marca, cores, identidade...">
+          </div>
+          <div class="field full">
+            <label>Texto principal / headline</label>
+            <input id="headline" placeholder="Mensagem principal">
+          </div>
+          <div class="field full">
+            <label>Texto secundário</label>
+            <textarea id="subtext" placeholder="Benefício, descrição..."></textarea>
+          </div>
+          <div class="field full">
+            <label>CTA / chamada para ação</label>
+            <input id="cta" placeholder="Ex.: Comprar agora | Saiba mais">
+          </div>
+          <div class="field full">
+            <label>Estilo visual</label>
+            <input id="style" placeholder="Ex.: moderno, sofisticado, clean, cinematográfico...">
+          </div>
+          <div class="field full">
+            <label>Elementos / cenário</label>
+            <textarea id="scene" placeholder="Fundo, pessoas, objetos, iluminação, composição..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Imagem de referência <span class="hint">anexe depois no ChatGPT</span></label>
+            <div class="upload" id="dropzone">
+              <div class="upload-content" id="uploadContent">
+                <strong>🖼️ Arraste a imagem aqui</strong>
+                ou selecione do computador
+                <br><label class="file-btn">Selecionar imagem<input id="fileInput" type="file" accept="image/*" hidden></label>
+              </div>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Preservar / alterar elementos</label>
+            <textarea id="preserve" placeholder="Ex.: manter embalagem e logotipo; alterar só o cenário..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Observações adicionais</label>
+            <textarea id="notes" placeholder="Instruções extras..."></textarea>
+          </div>
+          <div class="field full">
+            <label>Opções rápidas <span class="hint">marque o que se aplica</span></label>
+            <div class="options">
+              <label class="chip">
+                <input type="checkbox" id="photoReal">
+                <span><strong>Fotorealista</strong><em>Aparência de foto real</em></span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" id="textFaithful">
+                <span><strong>Textos fiéis</strong><em>Manter textos da referência</em></span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" id="noExtraText">
+                <span><strong>Sem textos extras</strong><em>Não inventar legendas</em></span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" id="proFinish">
+                <span><strong>Acabamento pro</strong><em>Qualidade de agência</em></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button type="button" class="secondary" id="clearBtn">↺ Limpar campos</button>
+        </div>
+      </section>
+
+      <section class="panel preview">
+        <div class="preview-head">
+          <div>
+            <h2>Preview do comando</h2>
+            <small>Pronto para copiar</small>
+          </div>
+          <span class="badge" id="charCount">0 caracteres</span>
+        </div>
+        <div class="preview-box"><pre id="preview"></pre></div>
+        <div class="copy-area">
+          <div class="copy-row">
+            <button type="button" class="copy" id="copyBtn">📋 COPIAR COMANDO</button>
+            <button type="button" class="secondary" id="copySimpleBtn">Sem observações</button>
+          </div>
+          <div class="copy-row" id="imageCopyRow" style="display:none">
+            <button type="button" class="copy-img" id="copyImageBtn">🖼️ Copiar só a imagem</button>
+            <button type="button" class="ghost" id="downloadImgBtn">⬇ Baixar imagem</button>
+          </div>
+          <div class="help-box" id="helpBox">
+            <strong>Como usar na sua IA</strong>
+            1. Clique em <b>COPIAR COMANDO</b> e cole no campo de texto da IA.<br>
+            2. Se houver imagem de referência, anexe-a no campo de texto da IA com o botão de anexar (📎) ou copie pelo botão <b>Copiar só a imagem</b>  e cole no campo de texto da IA com  Control + V  — a imagem <b>não cola automaticamente</b> junto com o texto na maioria dos navegadores.<br>
+            3. Envie a mensagem.
+          </div>
+          <div class="status" id="status"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+</div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">Como usar</h3>
+    <p id="modalBody"></p>
+    <button type="button" class="primary" onclick="closeModal()">Entendi</button>
+  </div>
+</div>
+
+<script>
+const commands = [
+{cat:"🌐 SITE & WEB",name:"/Website Hero",desc:"Cria o visual principal de um site, reservando espaço estratégico para headline e CTA.",fields:["size","objective","product","headline","cta","style","scene"]},
+{cat:"🌐 SITE & WEB",name:"/Website Banner",desc:"Banner horizontal para seções de sites, páginas institucionais e campanhas.",fields:["size","objective","headline","cta","style"]},
+{cat:"🌐 SITE & WEB",name:"/Landing Page Hero",desc:"Hero visual para landing pages com foco em conversão, clareza e impacto.",fields:["size","objective","audience","headline","cta","style"]},
+{cat:"🌐 SITE & WEB",name:"/Website Section",desc:"Arte criada para ocupar uma seção específica de uma página web.",fields:["size","objective","product","style","scene"]},
+{cat:"🌐 SITE & WEB",name:"/Web Banner",desc:"Composição digital horizontal para banners e áreas promocionais.",fields:["size","objective","headline","cta"]},
+{cat:"🌐 SITE & WEB",name:"/Web Ad",desc:"Publicidade visual para websites e mídia digital.",fields:["size","audience","headline","cta","style"]},
+{cat:"📢 ANÚNCIOS",name:"/Meta ad",desc:"Criativo pensado para anúncios em Facebook e Instagram, com hierarquia comercial e foco em conversão.",fields:["size","objective","audience","product","headline","cta","style"]},
+{cat:"📢 ANÚNCIOS",name:"/Social Media Ad",desc:"Peça dinâmica para redes sociais, equilibrando impacto visual e mensagem.",fields:["size","objective","audience","headline","cta"]},
+{cat:"📢 ANÚNCIOS",name:"/Product Ad",desc:"Transforma um produto em uma peça publicitária comercial, destacando valor e benefícios.",fields:["size","product","headline","subtext","cta","style"]},
+{cat:"📢 ANÚNCIOS",name:"/Commercial",desc:"Direção visual de campanha publicitária profissional, semelhante a material de agência.",fields:["objective","audience","product","headline","style","scene"]},
+{cat:"📢 ANÚNCIOS",name:"/Campaign Creative",desc:"Desenvolve um criativo com conceito de campanha, mensagem e identidade visual.",fields:["objective","audience","brand","headline","cta","style"]},
+{cat:"📢 ANÚNCIOS",name:"/Corporate Ad",desc:"Anúncio com linguagem empresarial, institucional e profissional.",fields:["size","objective","brand","headline","cta","style"]},
+{cat:"📱 REDES SOCIAIS",name:"/Instagram Post",desc:"Composição para publicação de Instagram, priorizando leitura e impacto no feed.",fields:["size","objective","headline","cta","style"]},
+{cat:"📱 REDES SOCIAIS",name:"/Instagram Story",desc:"Criativo vertical para Stories, com hierarquia visual adequada ao formato.",fields:["size","objective","headline","cta","scene"]},
+{cat:"📱 REDES SOCIAIS",name:"/Social Carousel",desc:"Direção visual para uma sequência de cards coerentes dentro de uma campanha.",fields:["size","objective","headline","style"]},
+{cat:"📱 REDES SOCIAIS",name:"/Social Media Campaign",desc:"Cria uma linguagem visual consistente para uma campanha em redes sociais.",fields:["objective","audience","brand","style","scene"]},
+{cat:"📰 EDITORIAL",name:"/Newspaper ad",desc:"Anúncio com estética editorial de jornal, mais informativa, estruturada e tradicional.",fields:["size","objective","headline","subtext","cta","style"]},
+{cat:"📰 EDITORIAL",name:"/Editorial",desc:"Visual de revista/editorial, sofisticado, conceitual e com direção de arte.",fields:["objective","product","style","scene"]},
+{cat:"📰 EDITORIAL",name:"/Magazine Cover",desc:"Capa de revista com composição editorial, título e chamadas visuais.",fields:["size","headline","subtext","style","scene"]},
+{cat:"📰 EDITORIAL",name:"/Poster",desc:"Cartaz de impacto, priorizando mensagem central e composição visual forte.",fields:["size","objective","headline","cta","style"]},
+{cat:"📰 EDITORIAL",name:"/Flyer",desc:"Panfleto promocional ou informativo com hierarquia de informações.",fields:["size","objective","headline","subtext","cta"]},
+{cat:"📰 EDITORIAL",name:"/Brochure",desc:"Visual semelhante a folder institucional ou material promocional.",fields:["objective","brand","headline","subtext","style"]},
+{cat:"📰 EDITORIAL",name:"/Catalog",desc:"Apresentação visual de catálogo, ideal para organizar produtos e informações.",fields:["size","product","style"]},
+{cat:"📦 PRODUTOS",name:"/Product Showcase",desc:"Coloca o produto como protagonista com iluminação, cenário e composição profissional.",fields:["size","product","objective","style","scene"]},
+{cat:"📦 PRODUTOS",name:"/Premium Showcase",desc:"Apresentação sofisticada de produto, com iluminação premium e alto valor percebido.",fields:["size","product","brand","objective","style","scene"]},
+{cat:"📦 PRODUTOS",name:"/Product Photography",desc:"Simula fotografia profissional de produto, com enquadramento e iluminação controlados.",fields:["size","product","style","scene"]},
+{cat:"📦 PRODUTOS",name:"/Studio Product",desc:"Produto fotografado em estúdio, com fundo e iluminação cuidadosamente controlados.",fields:["size","product","style","scene"]},
+{cat:"📦 PRODUTOS",name:"/Hero Product",desc:"Faz do produto o elemento central da composição, ideal para banners e áreas Hero.",fields:["size","product","headline","cta","style"]},
+{cat:"📦 PRODUTOS",name:"/Packaging Showcase",desc:"Valoriza especificamente a embalagem, frasco, caixa, bisnaga, rótulo ou apresentação.",fields:["size","product","objective","style","preserve","scene"]},
+{cat:"📦 PRODUTOS",name:"/E-commerce Product",desc:"Apresentação comercial para lojas virtuais, páginas de venda e catálogo.",fields:["size","product","headline","style"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Luxury",desc:"Estética luxuosa, sofisticada e refinada, com foco em percepção de valor.",fields:["product","brand","style","scene"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Luxury Product",desc:"Apresenta um produto como item premium de alto padrão.",fields:["size","product","brand","style","scene"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/High-End Advertising",desc:"Publicidade com aparência de marca internacional e acabamento high-end.",fields:["objective","product","headline","style","scene"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Luxury Campaign",desc:"Direção visual sofisticada para campanha publicitária premium.",fields:["objective","audience","brand","headline","style"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Premium Editorial",desc:"Combina linguagem editorial de revista com acabamento premium.",fields:["product","headline","style","scene"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Elegant",desc:"Visual elegante, limpo e refinado, sem excesso de elementos.",fields:["product","style","scene"]},
+{cat:"💎 PREMIUM & LUXURY",name:"/Minimalist",desc:"Composição minimalista com simplicidade, espaço negativo e foco no essencial.",fields:["product","headline","style","scene"]},
+{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Billboard",desc:"Outdoor publicitário com mensagem curta, grande impacto e leitura à distância.",fields:["size","objective","headline","cta","scene"]},
+{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/3D BILLBOARD",desc:"Publicidade em outdoor com perspectiva, profundidade e elementos visualmente saindo da estrutura.",fields:["size","product","headline","style","scene"]},
+{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Digital Billboard",desc:"Criativo para painéis digitais e publicidade eletrônica de grande formato.",fields:["size","headline","cta","style"]},
+{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Outdoor Advertising",desc:"Direção geral para publicidade externa, priorizando visibilidade e impacto.",fields:["size","objective","headline","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Studio Photography",desc:"Fotografia em estúdio com iluminação e enquadramento controlados.",fields:["product","style","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Lifestyle Photography",desc:"Mostra produto ou serviço em uma situação de uso natural e aspiracional.",fields:["product","audience","style","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Commercial Photography",desc:"Aparência de fotografia produzida profissionalmente para publicidade.",fields:["product","objective","style","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Corporate Photography",desc:"Fotografia com linguagem empresarial, profissional e institucional.",fields:["brand","objective","style","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Portrait",desc:"Retrato profissional ou artístico com direção de luz, pose e ambiente.",fields:["objective","style","scene"]},
+{cat:"📸 FOTOGRAFIA",name:"/Fashion Editorial",desc:"Fotografia com linguagem de editorial de moda e direção artística.",fields:["style","scene"]},
+{cat:"🏢 CORPORATIVO",name:"/Corporate",desc:"Estética institucional e empresarial, transmitindo credibilidade e profissionalismo.",fields:["brand","objective","headline","style","scene"]},
+{cat:"🏢 CORPORATIVO",name:"/Institutional",desc:"Comunicação focada em marca, posicionamento, confiança e reputação.",fields:["brand","objective","headline","subtext","style"]},
+{cat:"🏢 CORPORATIVO",name:"/Corporate Campaign",desc:"Campanha institucional com linguagem visual empresarial consistente.",fields:["brand","objective","audience","headline","style"]},
+{cat:"🏢 CORPORATIVO",name:"/Business Presentation",desc:"Visual para apresentação de empresa, serviço, projeto ou proposta.",fields:["brand","objective","headline","subtext","style"]},
+{cat:"🏢 CORPORATIVO",name:"/Professional Services",desc:"Ideal para profissionais, consultorias, clínicas e serviços especializados.",fields:["objective","audience","brand","headline","cta","style"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Cinematic",desc:"Direção visual cinematográfica, com atmosfera, profundidade e iluminação dramática.",fields:["product","style","scene"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Photorealistic",desc:"Prioriza aparência fotográfica realista, materiais naturais e detalhes convincentes.",fields:["product","scene"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Futuristic",desc:"Estética tecnológica e futurista com formas, luzes e ambientes contemporâneos.",fields:["product","style","scene"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Modern",desc:"Visual contemporâneo, atual e limpo, com composição comercial.",fields:["product","headline","style","scene"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Bold Advertising",desc:"Publicidade ousada, forte e visualmente chamativa.",fields:["headline","cta","style","scene"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Clean Commercial",desc:"Publicidade limpa e objetiva, com poucos elementos e alta legibilidade.",fields:["product","headline","cta","style"]},
+{cat:"🎨 ESTILOS VISUAIS",name:"/Creative Art Direction",desc:"Direção de arte conceitual para criar uma composição visual original e marcante.",fields:["objective","product","style","scene"]},
+
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Article Outline",desc:"Estrutura completa de artigo com título, subtítulos, argumentos e ordem lógica.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Blog Post",desc:"Post de blog completo, com introdução, desenvolvimento, conclusão e tom adequado ao público.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/How-to Guide",desc:"Guia passo a passo claro, prático e fácil de seguir sobre um tema.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Opinion Piece",desc:"Artigo de opinião com tese, argumentos e tom autoral.",fields:["objective","audience","headline","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Case Study",desc:"Estudo de caso com contexto, desafio, solução, resultados e aprendizados.",fields:["objective","audience","product","headline","subtext","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Newsletter Copy",desc:"Texto de newsletter com gancho, valor e CTA claros.",fields:["objective","audience","headline","subtext","cta","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Listicle",desc:"Artigo em formato de lista (ex.: 7 dicas, 10 erros) com itens úteis e legíveis.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/SEO Article",desc:"Artigo otimizado para busca, com palavras-chave, títulos e estrutura legível.",fields:["objective","audience","headline","subtext","style","notes"]},
+
+
+{cat:"📚 LIVROS & LONG-FORM",name:"/Book Outline",desc:"Sumário de livro com capítulos, objetivos de cada parte e arco geral.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Chapter Draft",desc:"Rascunho de um capítulo com abertura, desenvolvimento e fechamento.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Book Blurb",desc:"Sinopse / texto de contracapa que desperta interesse sem entregar o final.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Character Sheet",desc:"Ficha de personagem (ficção): aparência, motivação, conflitos e arco.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Nonfiction Structure",desc:"Estrutura de livro técnico ou de negócios: partes, capítulos e progressão didática.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Preface / Introduction",desc:"Prefácio ou introdução que contextualiza o livro e conecta com o leitor.",fields:["objective","audience","headline","subtext","style","notes"]},
+{cat:"📚 LIVROS & LONG-FORM",name:"/Chapter Summary",desc:"Resumo de capítulo para revisão, sumário expandido ou material de apoio.",fields:["objective","headline","subtext","style","notes"]},
+
+
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Sales Page",desc:"Texto de página de vendas com headline, benefícios, objeções e CTA.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Product Description",desc:"Descrição comercial de produto ou serviço, clara e persuasiva.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Press Release",desc:"Release jornalístico com lead, fatos, citações e boileplate.",fields:["objective","audience","brand","headline","subtext","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Script",desc:"Roteiro curto para Reels, anúncio, vídeo institucional ou apresentação.",fields:["objective","audience","headline","subtext","cta","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Email Sequence",desc:"Sequência de e-mails (bem-vindo, nutrição, oferta) com objetivo claro.",fields:["objective","audience","product","headline","cta","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Landing Page Copy",desc:"Textos de landing page: headline, subheadline, benefícios e CTA.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/About Us",desc:"Texto institucional 'Sobre nós' com posicionamento e tom de marca.",fields:["objective","audience","brand","headline","subtext","style","notes"]},
+{cat:"💼 ESCRITA PROFISSIONAL",name:"/Proposal / Pitch",desc:"Proposta comercial ou pitch escrito com problema, solução e próximos passos.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]}
+
+];
+
+const $ = id => document.getElementById(id);
+let selectedCat = "TODOS";
+let favorites = new Set(JSON.parse(localStorage.getItem("creativeFavorites") || "[]"));
+let selected = null;
+let mergedList = [];
+let imageName = "";
+let imageBlob = null;
+let imageDataUrl = null;
+let showFavorites = false;
+let mergeMode = false;
+let mergeSelection = new Set();
+let activeSizePreset = null; // null | "custom" | button element
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+}
+
+function updateSteps() {
+  const hasCmd = !!(selected || mergedList.length);
+  const hasData = ["size","objective","audience","product","brand","headline","subtext","cta","style","scene","preserve","notes"]
+    .some(id => value(id)) || imageName;
+  document.querySelectorAll(".step").forEach(el => {
+    const n = +el.dataset.step;
+    el.classList.remove("current", "done");
+    if (n === 1) {
+      if (hasCmd) el.classList.add("done");
+      else el.classList.add("current");
+    } else if (n === 2) {
+      if (hasCmd && hasData) el.classList.add("done");
+      else if (hasCmd) el.classList.add("current");
+    } else if (n === 3) {
+      if (hasCmd && hasData) el.classList.add("current");
+    }
+  });
+}
+
+function categories() {
+  const cats = ["TODOS", ...new Set(commands.map(x => x.cat))];
+  $("categories").innerHTML = cats.map(c => {
+    const count = c === "TODOS" ? commands.length : commands.filter(x => x.cat === c).length;
+    const label = c === "TODOS" ? "Todos" : c.replace(/^\S+\s/, "");
+    const icon = c === "TODOS" ? "✨" : c.split(" ")[0];
+    return `<button type="button" class="cat ${selectedCat === c && !showFavorites ? "active" : ""}" data-cat="${esc(c)}">${icon} <span>${label}</span><span class="count">${count}</span></button>`;
+  }).join("");
+  document.querySelectorAll(".cat").forEach(b => {
+    b.onclick = () => {
+      selectedCat = b.dataset.cat;
+      showFavorites = false;
+      $("favoritesBtn").classList.remove("active");
+      render();
+    };
+  });
+}
+
+function render() {
+  categories();
+  const q = $("search").value.trim().toLowerCase();
+  let list = commands.filter(c => {
+    const catOk = selectedCat === "TODOS" || c.cat === selectedCat;
+    const favOk = !showFavorites || favorites.has(c.name);
+    const qOk = !q || (c.name + " " + c.desc + " " + c.cat).toLowerCase().includes(q);
+    return catOk && favOk && qOk;
+  });
+  $("categoryTitle").textContent = showFavorites ? "⭐ Favoritos" : selectedCat === "TODOS" ? "Todos os comandos" : selectedCat.replace(/^\S+\s/, "");
+  $("resultCount").textContent = list.length + " comando" + (list.length !== 1 ? "s" : "");
+
+  $("mergeBar").classList.toggle("show", mergeMode);
+  $("mergeCount").textContent = mergeSelection.size + " selecionado" + (mergeSelection.size !== 1 ? "s" : "");
+  $("mergeModeBtn").classList.toggle("active", mergeMode);
+
+  const isSelected = (name) => {
+    if (mergedList.length) return mergedList.some(m => m.name === name);
+    return selected && selected.name === name;
+  };
+
+  $("commandList").innerHTML = list.length ? list.map(c => `
+    <article class="command-card ${isSelected(c.name) ? "selected" : ""} ${mergeMode ? "merge-check" : ""}">
+      ${mergeMode ? `<input type="checkbox" class="card-check" data-name="${esc(c.name)}" ${mergeSelection.has(c.name) ? "checked" : ""}>` : ""}
+      <div class="card-top">
+        <div class="command-name">${esc(c.name)}</div>
+        <button type="button" class="star ${favorites.has(c.name) ? "on" : ""}" title="Favoritar" data-star="${esc(c.name)}">${favorites.has(c.name) ? "★" : "☆"}</button>
+      </div>
+      <div class="command-desc">${esc(c.desc)}</div>
+      <div class="card-actions">
+        <button type="button" class="use-btn" data-use="${esc(c.name)}">Usar</button>
+        <button type="button" class="secondary" data-info="${esc(c.name)}">Estrutura</button>
+      </div>
+    </article>`).join("") : `<div class="empty">Nenhum comando encontrado.<br><small>Tente outra busca ou categoria.</small></div>`;
+
+  document.querySelectorAll("[data-use]").forEach(b => b.onclick = () => selectCommand(b.dataset.use));
+  document.querySelectorAll("[data-star]").forEach(b => b.onclick = e => { e.stopPropagation(); toggleFav(b.dataset.star); });
+  document.querySelectorAll("[data-info]").forEach(b => b.onclick = () => showStructure(b.dataset.info));
+  document.querySelectorAll(".card-check").forEach(ch => {
+    ch.onchange = () => {
+      if (ch.checked) mergeSelection.add(ch.dataset.name);
+      else mergeSelection.delete(ch.dataset.name);
+      $("mergeCount").textContent = mergeSelection.size + " selecionado" + (mergeSelection.size !== 1 ? "s" : "");
+    };
+  });
+  updateSteps();
+  renderMergedTags();
+  updateWorkspaceVisibility();
+}
+
+function updateWorkspaceVisibility() {
+  const hasCmd = !!(selected || mergedList.length);
+  $("workspace").classList.toggle("visible", hasCmd);
+  if (hasCmd) {
+    setTimeout(() => {
+      $("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  }
+}
+
+function selectCommand(name) {
+  if (mergeMode) {
+    if (mergeSelection.has(name)) mergeSelection.delete(name);
+    else mergeSelection.add(name);
+    $("mergeCount").textContent = mergeSelection.size + " selecionado" + (mergeSelection.size !== 1 ? "s" : "");
+    render();
+    return;
+  }
+  selected = commands.find(c => c.name === name);
+  mergedList = [];
+  $("activeCommand").textContent = selected.name;
+  $("activeCommand").classList.remove("merged");
+  updatePreview();
+  render();
+}
+
+function applyMerge() {
+  if (mergeSelection.size < 2) {
+    setStatus("Selecione pelo menos 2 comandos para mesclar.", "warn");
+    return;
+  }
+  mergedList = commands.filter(c => mergeSelection.has(c.name));
+  selected = null;
+  const names = mergedList.map(c => c.name).join(" + ");
+  $("activeCommand").textContent = "/Mesclado";
+  $("activeCommand").classList.add("merged");
+  mergeMode = false;
+  mergeSelection.clear();
+  $("mergeModeBtn").classList.remove("active");
+  updatePreview();
+  render();
+  setStatus("Comandos mesclados: " + names, "ok");
+}
+
+function renderMergedTags() {
+  const box = $("mergedTags");
+  if (!mergedList.length) {
+    box.innerHTML = "";
+    return;
+  }
+  box.innerHTML = mergedList.map((c, i) =>
+    `<span class="tag">${esc(c.name)} <button type="button" data-rm="${i}" title="Remover">×</button></span>`
+  ).join("");
+  box.querySelectorAll("[data-rm]").forEach(b => {
+    b.onclick = () => {
+      mergedList.splice(+b.dataset.rm, 1);
+      if (mergedList.length === 1) {
+        selected = mergedList[0];
+        mergedList = [];
+        $("activeCommand").textContent = selected.name;
+        $("activeCommand").classList.remove("merged");
+      } else if (mergedList.length === 0) {
+        selected = null;
+        $("activeCommand").textContent = "/Selecione";
+        $("activeCommand").classList.remove("merged");
+      }
+      updatePreview();
+      render();
+    };
+  });
+}
+
+function toggleFav(name) {
+  favorites.has(name) ? favorites.delete(name) : favorites.add(name);
+  localStorage.setItem("creativeFavorites", JSON.stringify([...favorites]));
+  render();
+}
+
+function showStructure(name) {
+  const c = commands.find(x => x.name === name);
+  const labels = {
+    size: "Tamanho / formato", objective: "Objetivo", audience: "Público-alvo", product: "Produto / serviço",
+    brand: "Marca / identidade", headline: "Texto principal", subtext: "Texto secundário", cta: "CTA",
+    style: "Estilo visual", scene: "Elementos / cenário", preserve: "Preservar / alterar elementos"
+  };
+  $("modalTitle").textContent = c.name;
+  $("modalBody").textContent = c.desc + " Campos sugeridos: " + c.fields.map(f => labels[f] || f).join(", ") + ".";
+  $("modal").classList.add("open");
+}
+
+function closeModal() { $("modal").classList.remove("open"); }
+
+function value(id) { return $(id).value.trim(); }
+
+/* ===== Size presets logic ===== */
+function syncSizeFromPreset() {
+  const sizeInput = $("size");
+  if (activeSizePreset === "custom") {
+    const w = $("sizeW").value.trim();
+    const h = $("sizeH").value.trim();
+    if (w && h) {
+      sizeInput.value = w + " × " + h + " px";
+    } else {
+      sizeInput.value = "";
+    }
+  }
+  updatePreview();
+}
+
+function selectSizePreset(btn) {
+  document.querySelectorAll(".size-preset").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  if (btn.dataset.custom === "1") {
+    activeSizePreset = "custom";
+    $("customSizeBox").classList.add("open");
+    // keep previous custom values if any
+    syncSizeFromPreset();
+  } else {
+    activeSizePreset = btn;
+    $("customSizeBox").classList.remove("open");
+    const w = btn.dataset.w;
+    const h = btn.dataset.h;
+    const label = btn.dataset.label || (w + " × " + h + " px");
+    $("size").value = label;
+    $("sizeW").value = w;
+    $("sizeH").value = h;
+    updatePreview();
+  }
+}
+
+function initSizePresets() {
+  document.querySelectorAll(".size-preset").forEach(btn => {
+    btn.addEventListener("click", () => selectSizePreset(btn));
+  });
+  $("sizeW").addEventListener("input", () => {
+    if (activeSizePreset === "custom") syncSizeFromPreset();
+  });
+  $("sizeH").addEventListener("input", () => {
+    if (activeSizePreset === "custom") syncSizeFromPreset();
+  });
+}
+
+function getCommandHeader() {
+  if (mergedList.length) {
+    return "/Comando mesclado: " + mergedList.map(c => c.name).join(" + ");
+  }
+  return selected ? selected.name : "/Selecione um comando";
+}
+
+function getMergedHint() {
+  if (!mergedList.length) return "";
+  const descs = mergedList.map(c => "• " + c.name + " — " + c.desc).join("\n");
+  const writing = mergedList.every(c =>
+    ["✍️ ARTIGOS & CONTEÚDO", "📚 LIVROS & LONG-FORM", "💼 ESCRITA PROFISSIONAL"].includes(c.cat)
+  );
+  const end = writing
+    ? "Una as melhores características de cada um acima em um único TEXTO coerente.\n"
+    : "Una as melhores características de cada um acima em um único criativo coerente.\n";
+  return "\nCOMBINAÇÃO:\n" + descs + "\n" + end;
+}
+
+function isWritingCommand() {
+  const writingCats = ["✍️ ARTIGOS & CONTEÚDO", "📚 LIVROS & LONG-FORM", "💼 ESCRITA PROFISSIONAL"];
+  if (mergedList.length) {
+    return mergedList.every(c => writingCats.includes(c.cat));
+  }
+  return selected && writingCats.includes(selected.cat);
+}
+
+function updatePreview() {
+  const lines = [getCommandHeader(), ""];
+  const hint = getMergedHint();
+  if (hint) lines.push(hint.trim(), "");
+
+  const fields = [
+    ["size", "Tamanho / formato"],
+    ["objective", "Objetivo"],
+    ["audience", "Público-alvo"],
+    ["product", "Produto / serviço"],
+    ["brand", "Marca / identidade"],
+    ["headline", "Texto principal / headline"],
+    ["subtext", "Texto secundário"],
+    ["cta", "CTA / chamada para ação"],
+    ["style", "Estilo visual"],
+    ["scene", "Elementos / cenário"]
+  ];
+  fields.forEach(([id, label]) => {
+    const v = value(id);
+    if (v) lines.push(label + ": " + v);
+  });
+
+  const writing = isWritingCommand();
+
+  if (writing) {
+    if (imageName) {
+      lines.push(
+        "",
+        "REFERÊNCIA (opcional):",
+        "Arquivo: " + imageName,
+        "Se uma imagem for anexada, use apenas como inspiração de tom/tema. O entregável principal é TEXTO, não imagem."
+      );
+    }
+  } else {
+    if (imageName) {
+      lines.push(
+        "",
+        "IMAGEM DE REFERÊNCIA:",
+        "Nome do arquivo: " + imageName,
+        "IMPORTANTE: Anexe esta imagem no ChatGPT usando o botão de anexar (📎) junto com este comando.",
+        "Se a imagem for anexada, use-a como referência visual e preserve fielmente os elementos indicados.",
+        "Se nenhuma imagem for anexada, crie o criativo do zero seguindo as especificações."
+      );
+    } else {
+      lines.push(
+        "",
+        "IMAGEM DE REFERÊNCIA:",
+        "Nenhuma imagem anexada. Crie o criativo do zero seguindo as especificações abaixo."
+      );
+    }
+  }
+
+  const preserve = value("preserve");
+  if (preserve) lines.push("", "PRESERVAR / ALTERAR:", preserve);
+
+  const notes = value("notes");
+  if (notes) lines.push("", "OBSERVAÇÕES ADICIONAIS:", notes);
+
+  const opts = [];
+  if (!writing) {
+    if ($("photoReal").checked) opts.push("priorizar acabamento fotorealista");
+    if ($("textFaithful").checked) opts.push("respeitar fielmente textos e elementos legíveis da imagem de referência");
+    if ($("noExtraText").checked) opts.push("não adicionar textos que não foram solicitados");
+    if ($("proFinish").checked) opts.push("entregar acabamento profissional de publicidade");
+  } else {
+    if ($("proFinish").checked) opts.push("entregar texto profissional, claro e bem estruturado");
+  }
+  if (opts.length) lines.push("", "DIRETRIZES RÁPIDAS:", ...opts.map(x => "• " + x));
+
+  if (writing) {
+    lines.push(
+      "",
+      "INSTRUÇÃO FINAL:",
+      "Escreva o TEXTO completo seguindo as especificações acima.",
+      "Não gere imagem. Entregue apenas conteúdo escrito (título, corpo, estrutura conforme o comando).",
+      "Use linguagem adequada ao público, com clareza, coesão e tom profissional (ou o tom indicado no estilo)."
+    );
+  } else {
+    lines.push(
+      "",
+      "INSTRUÇÃO FINAL:",
+      "Crie o criativo seguindo as especificações acima. Preserve fielmente os elementos indicados como preservados e priorize composição, hierarquia visual, legibilidade e acabamento profissional."
+    );
+  }
+
+  const text = lines.join("\n");
+  $("preview").textContent = text;
+  $("charCount").textContent = text.length + " caracteres";
+  $("imageCopyRow").style.display = imageBlob ? "flex" : "none";
+  updateSteps();
+}
+
+function setStatus(msg, type) {
+  const el = $("status");
+  el.textContent = msg;
+  el.className = "status " + (type || "");
+  if (msg) setTimeout(() => { if (el.textContent === msg) { el.textContent = ""; el.className = "status"; } }, 4000);
+}
+
+async function copyTextOnly(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    setStatus("✓ Comando copiado! Cole no ChatGPT e anexe a imagem com 📎 se houver.", "ok");
+    return true;
+  } catch (e) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      setStatus("✓ Comando copiado! Cole no ChatGPT e anexe a imagem com 📎 se houver.", "ok");
+      return true;
+    } catch (e2) {
+      setStatus("Não foi possível copiar. Selecione o texto do preview manualmente.", "err");
+      return false;
+    }
+  }
+}
+
+async function copyImageOnly() {
+  if (!imageBlob) {
+    setStatus("Nenhuma imagem carregada.", "warn");
+    return;
+  }
+  try {
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      setStatus("Seu navegador não permite copiar imagem. Use Baixar imagem.", "warn");
+      return;
+    }
+    const png = await convertImageToPNG(imageBlob);
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": png })]);
+    setStatus("✓ Imagem copiada. Cole no ChatGPT (Ctrl+V) ou anexe com 📎.", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Não foi possível copiar a imagem. Use Baixar imagem e anexe no ChatGPT.", "warn");
+  }
+}
+
+async function convertImageToPNG(file) {
+  if (file.type === "image/png") return file;
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext("2d").drawImage(bitmap, 0, 0);
+  return new Promise(resolve => canvas.toBlob(blob => resolve(blob), "image/png"));
+}
+
+function downloadImage() {
+  if (!imageBlob && !imageDataUrl) return;
+  const a = document.createElement("a");
+  a.download = imageName || "referencia.png";
+  a.href = imageDataUrl || URL.createObjectURL(imageBlob);
+  a.click();
+  setStatus("Download iniciado. Anexe o arquivo no ChatGPT.", "ok");
+}
+
+function clearForm() {
+  ["size","objective","audience","product","brand","headline","subtext","cta","style","scene","preserve","notes"].forEach(id => $(id).value = "");
+  ["photoReal","textFaithful","noExtraText","proFinish"].forEach(id => $(id).checked = false);
+  $("sizeW").value = "";
+  $("sizeH").value = "";
+  activeSizePreset = null;
+  document.querySelectorAll(".size-preset").forEach(b => b.classList.remove("active"));
+  $("customSizeBox").classList.remove("open");
+  imageName = "";
+  imageBlob = null;
+  imageDataUrl = null;
+  $("dropzone").classList.remove("has-image");
+  $("dropzone").innerHTML = `<div class="upload-content" id="uploadContent"><strong>🖼️ Arraste a imagem aqui</strong>ou selecione do computador<br><label class="file-btn">Selecionar imagem<input id="fileInput" type="file" accept="image/*" hidden></label></div>`;
+  bindFile();
+  updatePreview();
+}
+
+function bindFile() {
+  const input = $("fileInput");
+  const dz = $("dropzone");
+  if (!input) return;
+  input.onchange = e => handleFiles(e.target.files);
+  ["dragenter", "dragover"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("drag"); }));
+  ["dragleave", "drop"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove("drag"); }));
+  dz.addEventListener("drop", e => handleFiles(e.dataTransfer.files));
+}
+
+function handleFiles(files) {
+  const f = files && files[0];
+  if (!f || !f.type.startsWith("image/")) return;
+  imageName = f.name;
+  imageBlob = f;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imageDataUrl = e.target.result;
+    $("dropzone").classList.add("has-image");
+    $("dropzone").innerHTML = `
+      <img src="${e.target.result}" alt="Imagem de referência">
+      <div class="image-actions">
+        <button type="button" id="replaceImg">↻ Trocar</button>
+        <button type="button" id="removeImg">✕ Remover</button>
+      </div>`;
+    $("replaceImg").onclick = () => {
+      $("dropzone").innerHTML = `<div class="upload-content"><strong>🖼️ Selecione uma nova imagem</strong><label class="file-btn">Selecionar imagem<input id="fileInput" type="file" accept="image/*" hidden></label></div>`;
+      imageName = ""; imageBlob = null; imageDataUrl = null;
+      bindFile();
+      updatePreview();
+    };
+    $("removeImg").onclick = () => {
+      imageName = ""; imageBlob = null; imageDataUrl = null;
+      $("dropzone").classList.remove("has-image");
+      $("dropzone").innerHTML = `<div class="upload-content" id="uploadContent"><strong>🖼️ Arraste a imagem aqui</strong>ou selecione do computador<br><label class="file-btn">Selecionar imagem<input id="fileInput" type="file" accept="image/*" hidden></label></div>`;
+      bindFile();
+      updatePreview();
+    };
+    updatePreview();
+  };
+  reader.readAsDataURL(f);
+}
+
+/* Event listeners */
+document.querySelectorAll("input:not(#fileInput):not(#sizeW):not(#sizeH), textarea").forEach(el => el.addEventListener("input", updatePreview));
+$("search").addEventListener("input", render);
+
+$("favoritesBtn").onclick = () => {
+  showFavorites = !showFavorites;
+  $("favoritesBtn").classList.toggle("active", showFavorites);
+  if (showFavorites) selectedCat = "TODOS";
+  render();
+};
+
+$("mergeModeBtn").onclick = () => {
+  mergeMode = !mergeMode;
+  if (!mergeMode) mergeSelection.clear();
+  $("mergeModeBtn").classList.toggle("active", mergeMode);
+  render();
+};
+
+$("mergeGo").onclick = applyMerge;
+$("mergeClear").onclick = () => { mergeSelection.clear(); render(); };
+
+$("clearBtn").onclick = clearForm;
+$("newBtn").onclick = () => {
+  clearForm();
+  selected = null;
+  mergedList = [];
+  $("activeCommand").textContent = "/Selecione";
+  $("activeCommand").classList.remove("merged");
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+$("copyBtn").onclick = () => copyTextOnly($("preview").textContent);
+$("copySimpleBtn").onclick = () => {
+  const full = $("preview").textContent;
+  const cut = full.split("\n\nOBSERVAÇÕES ADICIONAIS:")[0];
+  copyTextOnly(cut);
+};
+$("copyImageBtn").onclick = copyImageOnly;
+$("downloadImgBtn").onclick = downloadImage;
+
+bindFile();
+initSizePresets();
+categories();
+updatePreview();
+</script>
+</body>
+</html>
