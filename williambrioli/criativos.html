@@ -614,96 +614,7 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5p
 </div>
 
 <script>
-const commands = [
-{cat:"🌐 SITE & WEB",name:"/Website Hero",desc:"Cria o visual principal de um site, reservando espaço estratégico para headline e CTA.",fields:["size","objective","product","headline","cta","style","scene"]},
-{cat:"🌐 SITE & WEB",name:"/Website Banner",desc:"Banner horizontal para seções de sites, páginas institucionais e campanhas.",fields:["size","objective","headline","cta","style"]},
-{cat:"🌐 SITE & WEB",name:"/Landing Page Hero",desc:"Hero visual para landing pages com foco em conversão, clareza e impacto.",fields:["size","objective","audience","headline","cta","style"]},
-{cat:"🌐 SITE & WEB",name:"/Website Section",desc:"Arte criada para ocupar uma seção específica de uma página web.",fields:["size","objective","product","style","scene"]},
-{cat:"🌐 SITE & WEB",name:"/Web Banner",desc:"Composição digital horizontal para banners e áreas promocionais.",fields:["size","objective","headline","cta"]},
-{cat:"🌐 SITE & WEB",name:"/Web Ad",desc:"Publicidade visual para websites e mídia digital.",fields:["size","audience","headline","cta","style"]},
-{cat:"📢 ANÚNCIOS",name:"/Meta ad",desc:"Criativo pensado para anúncios em Facebook e Instagram, com hierarquia comercial e foco em conversão.",fields:["size","objective","audience","product","headline","cta","style"]},
-{cat:"📢 ANÚNCIOS",name:"/Social Media Ad",desc:"Peça dinâmica para redes sociais, equilibrando impacto visual e mensagem.",fields:["size","objective","audience","headline","cta"]},
-{cat:"📢 ANÚNCIOS",name:"/Product Ad",desc:"Transforma um produto em uma peça publicitária comercial, destacando valor e benefícios.",fields:["size","product","headline","subtext","cta","style"]},
-{cat:"📢 ANÚNCIOS",name:"/Commercial",desc:"Direção visual de campanha publicitária profissional, semelhante a material de agência.",fields:["objective","audience","product","headline","style","scene"]},
-{cat:"📢 ANÚNCIOS",name:"/Campaign Creative",desc:"Desenvolve um criativo com conceito de campanha, mensagem e identidade visual.",fields:["objective","audience","brand","headline","cta","style"]},
-{cat:"📢 ANÚNCIOS",name:"/Corporate Ad",desc:"Anúncio com linguagem empresarial, institucional e profissional.",fields:["size","objective","brand","headline","cta","style"]},
-{cat:"📱 REDES SOCIAIS",name:"/Instagram Post",desc:"Composição para publicação de Instagram, priorizando leitura e impacto no feed.",fields:["size","objective","headline","cta","style"]},
-{cat:"📱 REDES SOCIAIS",name:"/Instagram Story",desc:"Criativo vertical para Stories, com hierarquia visual adequada ao formato.",fields:["size","objective","headline","cta","scene"]},
-{cat:"📱 REDES SOCIAIS",name:"/Social Carousel",desc:"Direção visual para uma sequência de cards coerentes dentro de uma campanha.",fields:["size","objective","headline","style"]},
-{cat:"📱 REDES SOCIAIS",name:"/Social Media Campaign",desc:"Cria uma linguagem visual consistente para uma campanha em redes sociais.",fields:["objective","audience","brand","style","scene"]},
-{cat:"📰 EDITORIAL",name:"/Newspaper ad",desc:"Anúncio com estética editorial de jornal, mais informativa, estruturada e tradicional.",fields:["size","objective","headline","subtext","cta","style"]},
-{cat:"📰 EDITORIAL",name:"/Editorial",desc:"Visual de revista/editorial, sofisticado, conceitual e com direção de arte.",fields:["objective","product","style","scene"]},
-{cat:"📰 EDITORIAL",name:"/Magazine Cover",desc:"Capa de revista com composição editorial, título e chamadas visuais.",fields:["size","headline","subtext","style","scene"]},
-{cat:"📰 EDITORIAL",name:"/Poster",desc:"Cartaz de impacto, priorizando mensagem central e composição visual forte.",fields:["size","objective","headline","cta","style"]},
-{cat:"📰 EDITORIAL",name:"/Flyer",desc:"Panfleto promocional ou informativo com hierarquia de informações.",fields:["size","objective","headline","subtext","cta"]},
-{cat:"📰 EDITORIAL",name:"/Brochure",desc:"Visual semelhante a folder institucional ou material promocional.",fields:["objective","brand","headline","subtext","style"]},
-{cat:"📰 EDITORIAL",name:"/Catalog",desc:"Apresentação visual de catálogo, ideal para organizar produtos e informações.",fields:["size","product","style"]},
-{cat:"📦 PRODUTOS",name:"/Product Showcase",desc:"Coloca o produto como protagonista com iluminação, cenário e composição profissional.",fields:["size","product","objective","style","scene"]},
-{cat:"📦 PRODUTOS",name:"/Premium Showcase",desc:"Apresentação sofisticada de produto, com iluminação premium e alto valor percebido.",fields:["size","product","brand","objective","style","scene"]},
-{cat:"📦 PRODUTOS",name:"/Product Photography",desc:"Simula fotografia profissional de produto, com enquadramento e iluminação controlados.",fields:["size","product","style","scene"]},
-{cat:"📦 PRODUTOS",name:"/Studio Product",desc:"Produto fotografado em estúdio, com fundo e iluminação cuidadosamente controlados.",fields:["size","product","style","scene"]},
-{cat:"📦 PRODUTOS",name:"/Hero Product",desc:"Faz do produto o elemento central da composição, ideal para banners e áreas Hero.",fields:["size","product","headline","cta","style"]},
-{cat:"📦 PRODUTOS",name:"/Packaging Showcase",desc:"Valoriza especificamente a embalagem, frasco, caixa, bisnaga, rótulo ou apresentação.",fields:["size","product","objective","style","preserve","scene"]},
-{cat:"📦 PRODUTOS",name:"/E-commerce Product",desc:"Apresentação comercial para lojas virtuais, páginas de venda e catálogo.",fields:["size","product","headline","style"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Luxury",desc:"Estética luxuosa, sofisticada e refinada, com foco em percepção de valor.",fields:["product","brand","style","scene"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Luxury Product",desc:"Apresenta um produto como item premium de alto padrão.",fields:["size","product","brand","style","scene"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/High-End Advertising",desc:"Publicidade com aparência de marca internacional e acabamento high-end.",fields:["objective","product","headline","style","scene"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Luxury Campaign",desc:"Direção visual sofisticada para campanha publicitária premium.",fields:["objective","audience","brand","headline","style"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Premium Editorial",desc:"Combina linguagem editorial de revista com acabamento premium.",fields:["product","headline","style","scene"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Elegant",desc:"Visual elegante, limpo e refinado, sem excesso de elementos.",fields:["product","style","scene"]},
-{cat:"💎 PREMIUM & LUXURY",name:"/Minimalist",desc:"Composição minimalista com simplicidade, espaço negativo e foco no essencial.",fields:["product","headline","style","scene"]},
-{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Billboard",desc:"Outdoor publicitário com mensagem curta, grande impacto e leitura à distância.",fields:["size","objective","headline","cta","scene"]},
-{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/3D BILLBOARD",desc:"Publicidade em outdoor com perspectiva, profundidade e elementos visualmente saindo da estrutura.",fields:["size","product","headline","style","scene"]},
-{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Digital Billboard",desc:"Criativo para painéis digitais e publicidade eletrônica de grande formato.",fields:["size","headline","cta","style"]},
-{cat:"🏙️ OUTDOOR & BILLBOARD",name:"/Outdoor Advertising",desc:"Direção geral para publicidade externa, priorizando visibilidade e impacto.",fields:["size","objective","headline","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Studio Photography",desc:"Fotografia em estúdio com iluminação e enquadramento controlados.",fields:["product","style","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Lifestyle Photography",desc:"Mostra produto ou serviço em uma situação de uso natural e aspiracional.",fields:["product","audience","style","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Commercial Photography",desc:"Aparência de fotografia produzida profissionalmente para publicidade.",fields:["product","objective","style","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Corporate Photography",desc:"Fotografia com linguagem empresarial, profissional e institucional.",fields:["brand","objective","style","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Portrait",desc:"Retrato profissional ou artístico com direção de luz, pose e ambiente.",fields:["objective","style","scene"]},
-{cat:"📸 FOTOGRAFIA",name:"/Fashion Editorial",desc:"Fotografia com linguagem de editorial de moda e direção artística.",fields:["style","scene"]},
-{cat:"🏢 CORPORATIVO",name:"/Corporate",desc:"Estética institucional e empresarial, transmitindo credibilidade e profissionalismo.",fields:["brand","objective","headline","style","scene"]},
-{cat:"🏢 CORPORATIVO",name:"/Institutional",desc:"Comunicação focada em marca, posicionamento, confiança e reputação.",fields:["brand","objective","headline","subtext","style"]},
-{cat:"🏢 CORPORATIVO",name:"/Corporate Campaign",desc:"Campanha institucional com linguagem visual empresarial consistente.",fields:["brand","objective","audience","headline","style"]},
-{cat:"🏢 CORPORATIVO",name:"/Business Presentation",desc:"Visual para apresentação de empresa, serviço, projeto ou proposta.",fields:["brand","objective","headline","subtext","style"]},
-{cat:"🏢 CORPORATIVO",name:"/Professional Services",desc:"Ideal para profissionais, consultorias, clínicas e serviços especializados.",fields:["objective","audience","brand","headline","cta","style"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Cinematic",desc:"Direção visual cinematográfica, com atmosfera, profundidade e iluminação dramática.",fields:["product","style","scene"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Photorealistic",desc:"Prioriza aparência fotográfica realista, materiais naturais e detalhes convincentes.",fields:["product","scene"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Futuristic",desc:"Estética tecnológica e futurista com formas, luzes e ambientes contemporâneos.",fields:["product","style","scene"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Modern",desc:"Visual contemporâneo, atual e limpo, com composição comercial.",fields:["product","headline","style","scene"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Bold Advertising",desc:"Publicidade ousada, forte e visualmente chamativa.",fields:["headline","cta","style","scene"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Clean Commercial",desc:"Publicidade limpa e objetiva, com poucos elementos e alta legibilidade.",fields:["product","headline","cta","style"]},
-{cat:"🎨 ESTILOS VISUAIS",name:"/Creative Art Direction",desc:"Direção de arte conceitual para criar uma composição visual original e marcante.",fields:["objective","product","style","scene"]},
-
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Article Outline",desc:"Estrutura completa de artigo com título, subtítulos, argumentos e ordem lógica.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Blog Post",desc:"Post de blog completo, com introdução, desenvolvimento, conclusão e tom adequado ao público.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/How-to Guide",desc:"Guia passo a passo claro, prático e fácil de seguir sobre um tema.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Opinion Piece",desc:"Artigo de opinião com tese, argumentos e tom autoral.",fields:["objective","audience","headline","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Case Study",desc:"Estudo de caso com contexto, desafio, solução, resultados e aprendizados.",fields:["objective","audience","product","headline","subtext","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Newsletter Copy",desc:"Texto de newsletter com gancho, valor e CTA claros.",fields:["objective","audience","headline","subtext","cta","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/Listicle",desc:"Artigo em formato de lista (ex.: 7 dicas, 10 erros) com itens úteis e legíveis.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"✍️ ARTIGOS & CONTEÚDO",name:"/SEO Article",desc:"Artigo otimizado para busca, com palavras-chave, títulos e estrutura legível.",fields:["objective","audience","headline","subtext","style","notes"]},
-
-
-{cat:"📚 LIVROS & LONG-FORM",name:"/Book Outline",desc:"Sumário de livro com capítulos, objetivos de cada parte e arco geral.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Chapter Draft",desc:"Rascunho de um capítulo com abertura, desenvolvimento e fechamento.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Book Blurb",desc:"Sinopse / texto de contracapa que desperta interesse sem entregar o final.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Character Sheet",desc:"Ficha de personagem (ficção): aparência, motivação, conflitos e arco.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Nonfiction Structure",desc:"Estrutura de livro técnico ou de negócios: partes, capítulos e progressão didática.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Preface / Introduction",desc:"Prefácio ou introdução que contextualiza o livro e conecta com o leitor.",fields:["objective","audience","headline","subtext","style","notes"]},
-{cat:"📚 LIVROS & LONG-FORM",name:"/Chapter Summary",desc:"Resumo de capítulo para revisão, sumário expandido ou material de apoio.",fields:["objective","headline","subtext","style","notes"]},
-
-
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Sales Page",desc:"Texto de página de vendas com headline, benefícios, objeções e CTA.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Product Description",desc:"Descrição comercial de produto ou serviço, clara e persuasiva.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Press Release",desc:"Release jornalístico com lead, fatos, citações e boileplate.",fields:["objective","audience","brand","headline","subtext","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Script",desc:"Roteiro curto para Reels, anúncio, vídeo institucional ou apresentação.",fields:["objective","audience","headline","subtext","cta","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Email Sequence",desc:"Sequência de e-mails (bem-vindo, nutrição, oferta) com objetivo claro.",fields:["objective","audience","product","headline","cta","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Landing Page Copy",desc:"Textos de landing page: headline, subheadline, benefícios e CTA.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/About Us",desc:"Texto institucional 'Sobre nós' com posicionamento e tom de marca.",fields:["objective","audience","brand","headline","subtext","style","notes"]},
-{cat:"💼 ESCRITA PROFISSIONAL",name:"/Proposal / Pitch",desc:"Proposta comercial ou pitch escrito com problema, solução e próximos passos.",fields:["objective","audience","product","headline","subtext","cta","style","notes"]}
-
-];
+let commands = [];   // vai ser preenchido depois do login
 
 const $ = id => document.getElementById(id);
 let selectedCat = "TODOS";
@@ -1254,12 +1165,20 @@ updatePreview();
 // Cole aqui a URL da sua implantação do Apps Script
 const URL_LOGIN = "https://script.google.com/macros/s/AKfycbyox307UqgTDe5hVqyKgelxynAYfrXEuWILdtOL27vS-A0rnEP2tjxgXUZGo-hoy-9CAw/exec";
 
+  
 function verificarSessao() {
-  if (sessionStorage.getItem("biblioteca_logado") === "sim") {
+  const logado = sessionStorage.getItem("biblioteca_logado") === "sim";
+  const commandsSalvos = sessionStorage.getItem("biblioteca_commands");
+
+  if (logado && commandsSalvos) {
+    commands = JSON.parse(commandsSalvos);
     document.getElementById("loginOverlay").style.display = "none";
     document.getElementById("mainApp").classList.remove("hidden");
+    render(); // importante
   }
 }
+
+  
 async function tentarLogin() {
   const senha = document.getElementById("loginPassword").value.trim();
   const erroEl = document.getElementById("loginError");
@@ -1279,7 +1198,7 @@ async function tentarLogin() {
       method: "POST",
       body: JSON.stringify({ senha: senha }),
       headers: {
-        "Content-Type": "text/plain;charset=utf-8"   // ← importante para evitar o erro de CORS
+        "Content-Type": "text/plain;charset=utf-8"
       }
     });
 
@@ -1287,9 +1206,19 @@ async function tentarLogin() {
     const dados = JSON.parse(texto);
 
     if (dados.success) {
+      // Guarda que está logado + os comandos
       sessionStorage.setItem("biblioteca_logado", "sim");
+      sessionStorage.setItem("biblioteca_commands", JSON.stringify(dados.commands));
+
+      // Atualiza a variável global
+      commands = dados.commands;
+
+      // Esconde login e mostra o app
       document.getElementById("loginOverlay").style.display = "none";
       document.getElementById("mainApp").classList.remove("hidden");
+
+      // Renderiza a biblioteca
+      render();
     } else {
       erroEl.textContent = "Senha incorreta";
       document.getElementById("loginPassword").value = "";
