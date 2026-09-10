@@ -146,6 +146,44 @@ button{cursor:pointer}
 .custom-size-row .x{font-weight:800;color:var(--muted);padding-bottom:10px;font-size:14px}
 .custom-size-row .unit{font-size:11px;color:var(--muted);font-weight:600;padding-bottom:10px}
 
+/* Identity / Palette presets */
+.identity-section{display:flex;flex-direction:column;gap:14px}
+.identity-group label.group-label{font-size:11px;font-weight:800;color:#475569;margin-bottom:2px;display:block}
+.palette-presets,.font-presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.palette-preset,.font-preset{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px;text-align:left;transition:.12s;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.palette-preset:hover,.font-preset:hover{border-color:#93c5fd;background:var(--soft)}
+.palette-preset.active,.font-preset.active{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 2px rgba(37,99,235,.15)}
+.palette-swatches{display:flex;gap:4px;height:22px}
+.palette-swatches span{flex:1;border-radius:5px;border:1px solid rgba(0,0,0,.08)}
+.palette-name,.font-name{font-size:11px;font-weight:700;color:#334155;line-height:1.25}
+.palette-desc,.font-desc{font-size:10px;color:var(--muted);line-height:1.3}
+.font-preview{font-size:15px;line-height:1.2;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.identity-custom{margin-top:4px}
+.identity-selected{display:flex;flex-wrap:wrap;gap:6px;min-height:0}
+.identity-selected .itag{background:var(--soft);color:var(--accent);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:4px}
+.identity-selected .itag button{border:0;background:transparent;color:var(--accent);font-size:13px;padding:0 2px;line-height:1;cursor:pointer}
+.identity-selected .itag.palette-tag{background:#fef3c7;color:#92400e}
+.identity-selected .itag.palette-tag button{color:#b45309}
+.identity-selected .itag.font-tag{background:#e0e7ff;color:#3730a3}
+.identity-selected .itag.font-tag button{color:#4338ca}
+
+/* Style & Scene checkbox groups */
+.check-group{display:flex;flex-direction:column;gap:10px}
+.check-group-title{font-size:11px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.check-item{
+  display:flex;align-items:center;gap:8px;
+  background:#f8fafc;border:1px solid var(--line);border-radius:10px;
+  padding:8px 10px;font-size:12px;color:#334155;cursor:pointer;
+  transition:.12s;line-height:1.3;
+}
+.check-item:hover{border-color:#cbd5e1;background:#f1f5f9}
+.check-item:has(input:checked){background:var(--soft);border-color:#93c5fd;color:var(--accent);font-weight:600}
+.check-item input{accent-color:var(--accent);flex-shrink:0;width:15px;height:15px;margin:0}
+.scene-groups{display:flex;flex-direction:column;gap:14px}
+.scene-group{display:flex;flex-direction:column;gap:6px}
+.scene-group-label{font-size:11px;font-weight:700;color:#64748b}
+
 .upload{border:1.5px dashed #cbd5e1;border-radius:12px;background:#f8fafc;min-height:120px;display:grid;place-items:center;text-align:center;padding:14px;transition:.15s;overflow:hidden}
 .upload.drag{border-color:var(--accent);background:var(--soft)}
 .upload.has-image{display:block;padding:0}
@@ -490,6 +528,32 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5p
             <input type="hidden" id="size" value="">
           </div>
 
+          <!-- 2. Identidade visual: Cores -->
+          <div class="field full">
+            <label>Identidade visual – Cores <span class="hint">escolha uma paleta</span></label>
+            <div class="identity-section">
+              <div>
+                <div class="palette-presets" id="palettePresets"></div>
+              </div>
+              <div class="identity-selected" id="identitySelectedPalette"></div>
+            </div>
+          </div>
+
+          <!-- 3. Identidade visual: Tipografia -->
+          <div class="field full">
+            <label>Identidade visual – Tipografia <span class="hint">escolha o estilo de fonte</span></label>
+            <div class="identity-section">
+              <div>
+                <div class="font-presets" id="fontPresets"></div>
+              </div>
+              <div class="identity-selected" id="identitySelectedFont"></div>
+              <div class="identity-custom">
+                <input id="brand" placeholder="Nome da marca, detalhes extras ou personalize a identidade...">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Contexto -->
           <div class="field full">
             <label>Objetivo</label>
             <input id="objective" placeholder="Ex.: banner para página inicial">
@@ -502,10 +566,8 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5p
             <label>Produto / serviço</label>
             <input id="product" placeholder="Nome ou descrição">
           </div>
-          <div class="field full">
-            <label>Marca / identidade</label>
-            <input id="brand" placeholder="Marca, cores, identidade...">
-          </div>
+
+          <!-- 5. Mensagens -->
           <div class="field full">
             <label>Texto principal / headline</label>
             <input id="headline" placeholder="Mensagem principal">
@@ -518,14 +580,93 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5p
             <label>CTA / chamada para ação</label>
             <input id="cta" placeholder="Ex.: Comprar agora | Saiba mais">
           </div>
+
+          <!-- 6. Estilo visual (checkboxes) -->
           <div class="field full">
-            <label>Estilo visual</label>
-            <input id="style" placeholder="Ex.: moderno, sofisticado, clean, cinematográfico...">
+            <label>Estilo visual <span class="hint">marque um ou mais</span></label>
+            <div class="check-group">
+              <div class="check-grid" id="styleChecks">
+                <label class="check-item"><input type="checkbox" name="style" value="Moderno / Clean"> <span>Moderno / Clean</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Sofisticado / Luxuoso"> <span>Sofisticado / Luxuoso</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Minimalista"> <span>Minimalista</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Cinematográfico"> <span>Cinematográfico</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Fotorealista"> <span>Fotorealista</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Vintage / Retrô"> <span>Vintage / Retrô</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Corporativo / Profissional"> <span>Corporativo / Profissional</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Divertido / Colorido"> <span>Divertido / Colorido</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Dark / Moody"> <span>Dark / Moody</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Bright / Alegre"> <span>Bright / Alegre</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Editorial"> <span>Editorial</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Tech / Futurista"> <span>Tech / Futurista</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Orgânico / Natural"> <span>Orgânico / Natural</span></label>
+                <label class="check-item"><input type="checkbox" name="style" value="Bold / Impactante"> <span>Bold / Impactante</span></label>
+              </div>
+              <input id="styleExtra" placeholder="Outro estilo ou detalhe extra (opcional)" style="margin-top:6px">
+            </div>
           </div>
+
+          <!-- 7. Elementos / cenário (checkboxes agrupados) -->
           <div class="field full">
-            <label>Elementos / cenário</label>
-            <textarea id="scene" placeholder="Fundo, pessoas, objetos, iluminação, composição..."></textarea>
+            <label>Elementos / cenário <span class="hint">marque o que se aplica</span></label>
+            <div class="scene-groups">
+              <div class="scene-group">
+                <div class="scene-group-label">Fundo</div>
+                <div class="check-grid">
+                  <label class="check-item"><input type="checkbox" name="scene" value="Fundo sólido"> <span>Fundo sólido</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Gradiente"> <span>Gradiente</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Textura"> <span>Textura</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Cenário natural"> <span>Cenário natural</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Urbano / cidade"> <span>Urbano / cidade</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Abstrato"> <span>Abstrato</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Estúdio"> <span>Estúdio</span></label>
+                </div>
+              </div>
+              <div class="scene-group">
+                <div class="scene-group-label">Pessoas</div>
+                <div class="check-grid">
+                  <label class="check-item"><input type="checkbox" name="scene" value="Sem pessoas"> <span>Sem pessoas</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="1 pessoa"> <span>1 pessoa</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Grupo"> <span>Grupo</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Modelo / influencer"> <span>Modelo / influencer</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Mãos / detalhe"> <span>Mãos / detalhe</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Silhueta"> <span>Silhueta</span></label>
+                </div>
+              </div>
+              <div class="scene-group">
+                <div class="scene-group-label">Objetos / produto</div>
+                <div class="check-grid">
+                  <label class="check-item"><input type="checkbox" name="scene" value="Produto em destaque"> <span>Produto em destaque</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Embalagem"> <span>Embalagem</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Props / acessórios"> <span>Props / acessórios</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Mockup"> <span>Mockup</span></label>
+                </div>
+              </div>
+              <div class="scene-group">
+                <div class="scene-group-label">Iluminação</div>
+                <div class="check-grid">
+                  <label class="check-item"><input type="checkbox" name="scene" value="Luz natural"> <span>Luz natural</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Estúdio suave"> <span>Estúdio suave</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Dramática"> <span>Dramática</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Golden hour"> <span>Golden hour</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Neon / colorida"> <span>Neon / colorida</span></label>
+                </div>
+              </div>
+              <div class="scene-group">
+                <div class="scene-group-label">Composição</div>
+                <div class="check-grid">
+                  <label class="check-item"><input type="checkbox" name="scene" value="Centralizado"> <span>Centralizado</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Regra dos terços"> <span>Regra dos terços</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Close-up"> <span>Close-up</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Wide / aberto"> <span>Wide / aberto</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Flat lay"> <span>Flat lay</span></label>
+                  <label class="check-item"><input type="checkbox" name="scene" value="Overhead / topo"> <span>Overhead / topo</span></label>
+                </div>
+              </div>
+              <input id="sceneExtra" placeholder="Detalhes extras do cenário (opcional)">
+            </div>
           </div>
+
+          <!-- 8. Imagem de referência -->
           <div class="field full">
             <label>Imagem de referência <span class="hint">anexe depois no ChatGPT</span></label>
             <div class="upload" id="dropzone">
@@ -536,14 +677,20 @@ pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#e2e8f0;font:11.5p
               </div>
             </div>
           </div>
+
+          <!-- 9. Preservar / alterar -->
           <div class="field full">
             <label>Preservar / alterar elementos</label>
             <textarea id="preserve" placeholder="Ex.: manter embalagem e logotipo; alterar só o cenário..."></textarea>
           </div>
+
+          <!-- 10. Observações -->
           <div class="field full">
             <label>Observações adicionais</label>
             <textarea id="notes" placeholder="Instruções extras..."></textarea>
           </div>
+
+          <!-- 11. Opções rápidas -->
           <div class="field full">
             <label>Opções rápidas <span class="hint">marque o que se aplica</span></label>
             <div class="options">
@@ -635,8 +782,9 @@ function esc(s) {
 
 function updateSteps() {
   const hasCmd = !!(selected || mergedList.length);
-  const hasData = ["size","objective","audience","product","brand","headline","subtext","cta","style","scene","preserve","notes"]
-    .some(id => value(id)) || imageName;
+  const hasData = ["size","objective","audience","product","brand","headline","subtext","cta","styleExtra","sceneExtra","preserve","notes"]
+    .some(id => value(id)) || imageName || selectedPalette || selectedFont
+    || getCheckedValues("style").length > 0 || getCheckedValues("scene").length > 0;
   document.querySelectorAll(".step").forEach(el => {
     const n = +el.dataset.step;
     el.classList.remove("current", "done");
@@ -863,6 +1011,165 @@ function initSizePresets() {
   });
 }
 
+/* ===== Identity: Color palettes + Font presets ===== */
+const COLOR_PALETTES = [
+  { id: "pastel-lux", name: "Pastel Luxuoso", desc: "Rosa suave, creme e dourado", colors: ["#F8E8EE","#F5D0C5","#E8C4A2","#D4A574","#8B6F47"] },
+  { id: "minimal-neutro", name: "Minimalista Neutro", desc: "Brancos, cinzas e preto suave", colors: ["#FFFFFF","#F5F5F5","#E5E5E5","#737373","#171717"] },
+  { id: "oceano-suave", name: "Oceano Suave", desc: "Azuis claros e areia", colors: ["#E0F2FE","#BAE6FD","#7DD3FC","#0EA5E9","#0369A1"] },
+  { id: "floresta-serena", name: "Floresta Serena", desc: "Verdes naturais e terra", colors: ["#ECFDF5","#A7F3D0","#6EE7B7","#059669","#064E3B"] },
+  { id: "sunset-tropical", name: "Sunset Tropical", desc: "Laranja, coral e rosa", colors: ["#FFF7ED","#FED7AA","#FB923C","#EA580C","#9A3412"] },
+  { id: "midnight-elegance", name: "Midnight Elegance", desc: "Azul-noite e prata", colors: ["#0F172A","#1E293B","#334155","#94A3B8","#E2E8F0"] },
+  { id: "coral-vibrante", name: "Coral Vibrante", desc: "Coral, pêssego e branco", colors: ["#FFF1F2","#FECDD3","#FB7185","#E11D48","#9F1239"] },
+  { id: "lavanda-sofisticada", name: "Lavanda Sofisticada", desc: "Lilás, roxo suave e creme", colors: ["#FAF5FF","#E9D5FF","#C4B5FD","#8B5CF6","#5B21B6"] },
+  { id: "terra-areia", name: "Terra e Areia", desc: "Bege, terracota e marrom", colors: ["#FEF3C7","#FDE68A","#D97706","#92400E","#451A03"] },
+  { id: "neon-moderno", name: "Neon Moderno", desc: "Preto com acentos neon", colors: ["#0A0A0A","#18181B","#22D3EE","#A3E635","#F472B6"] },
+  { id: "preto-dourado", name: "Preto e Dourado", desc: "Luxo clássico", colors: ["#0C0A09","#1C1917","#D4AF37","#F5E6C8","#FFFFFF"] },
+  { id: "ceu-branco", name: "Céu e Branco", desc: "Azul céu limpo e branco", colors: ["#F0F9FF","#E0F2FE","#38BDF8","#0284C7","#FFFFFF"] },
+  { id: "esmeralda", name: "Verde Esmeralda", desc: "Verde rico e dourado suave", colors: ["#ECFDF5","#34D399","#059669","#065F46","#FBBF24"] },
+  { id: "rosa-blush", name: "Rosa Blush", desc: "Rosa pálido e nude", colors: ["#FFF1F2","#FFE4E6","#FDA4AF","#BE123C","#FDF2F8"] },
+  { id: "cinza-industrial", name: "Cinza Industrial", desc: "Cinzas frios e aço", colors: ["#F8FAFC","#E2E8F0","#94A3B8","#475569","#1E293B"] },
+  { id: "amarelo-solar", name: "Amarelo Solar", desc: "Amarelo quente e branco", colors: ["#FEFCE8","#FEF08A","#FACC15","#CA8A04","#713F12"] },
+  { id: "roxo-real", name: "Roxo Real", desc: "Roxo profundo e prata", colors: ["#2E1065","#5B21B6","#A78BFA","#E0E7FF","#F8FAFC"] },
+  { id: "turquesa-fresh", name: "Turquesa Fresh", desc: "Turquesa e menta", colors: ["#F0FDFA","#99F6E4","#2DD4BF","#0D9488","#134E4A"] },
+  { id: "cafe-quente", name: "Café Quente", desc: "Marrom café e creme", colors: ["#F5F5F4","#D6D3D1","#A8A29E","#78716C","#44403C"] },
+  { id: "arcoiris-suave", name: "Arco-íris Suave", desc: "Cores pastéis suaves", colors: ["#FECACA","#FDE68A","#BBF7D0","#BFDBFE","#E9D5FF"] },
+  { id: "vinho-elegante", name: "Vinho Elegante", desc: "Bordô, vinho e dourado", colors: ["#450A0A","#7F1D1D","#B91C1C","#FCA5A5","#D4AF37"] },
+  { id: "gelo-nordico", name: "Gelo Nórdico", desc: "Azuis gelados e branco", colors: ["#F8FAFC","#E0F2FE","#7DD3FC","#0EA5E9","#0C4A6E"] },
+  { id: "outono-quente", name: "Outono Quente", desc: "Laranja queimado e folha", colors: ["#FFF7ED","#FDBA74","#EA580C","#9A3412","#431407"] },
+  { id: "menta-fresh", name: "Menta Fresh", desc: "Verde menta e branco", colors: ["#F0FDFA","#CCFBF1","#5EEAD4","#14B8A6","#0F766E"] }
+];
+
+const FONT_PRESETS = [
+  { id: "sans-moderno", name: "Sans Moderno", desc: "Limpo, legível, digital", preview: "Aa Inter / Helvetica", style: "font-family: Inter, system-ui, sans-serif; font-weight: 600;" },
+  { id: "serif-elegante", name: "Serif Elegante", desc: "Sofisticado e clássico", preview: "Aa Playfair / Georgia", style: "font-family: Georgia, 'Times New Roman', serif; font-weight: 600;" },
+  { id: "display-bold", name: "Display Bold", desc: "Impacto e destaque", preview: "Aa Impact Bold", style: "font-family: Impact, Haettenschweiler, sans-serif; font-weight: 700; letter-spacing: -0.02em;" },
+  { id: "script-sofisticado", name: "Script Sofisticado", desc: "Caligrafia elegante", preview: "Aa Script", style: "font-family: 'Brush Script MT', cursive; font-style: italic;" },
+  { id: "mono-tecnico", name: "Mono Técnico", desc: "Código, tech, preciso", preview: "Aa Mono", style: "font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 500;" },
+  { id: "geometrico", name: "Geométrico", desc: "Formas limpas e modernas", preview: "Aa Geometric", style: "font-family: 'Century Gothic', Futura, sans-serif; font-weight: 600;" },
+  { id: "humanoista", name: "Humanista", desc: "Amigável e acolhedor", preview: "Aa Humanist", style: "font-family: Verdana, Geneva, sans-serif; font-weight: 600;" },
+  { id: "slab-serifa", name: "Slab Serifa", desc: "Forte e editorial", preview: "Aa Slab", style: "font-family: 'Rockwell', 'Courier New', serif; font-weight: 700;" },
+  { id: "condensed", name: "Condensado", desc: "Espaço reduzido, impacto", preview: "Aa Condensed", style: "font-family: 'Arial Narrow', Arial, sans-serif; font-weight: 700; letter-spacing: -0.03em;" },
+  { id: "light-minimal", name: "Light Minimal", desc: "Leve e aéreo", preview: "Aa Light", style: "font-family: Inter, system-ui, sans-serif; font-weight: 300; letter-spacing: 0.04em;" },
+  { id: "black-impact", name: "Black Impact", desc: "Extra bold para títulos", preview: "Aa Black", style: "font-family: Impact, sans-serif; font-weight: 900; text-transform: uppercase;" },
+  { id: "rounded-friendly", name: "Rounded Friendly", desc: "Arredondado e amigável", preview: "Aa Rounded", style: "font-family: 'Nunito', 'Varela Round', sans-serif; font-weight: 700;" },
+  { id: "editorial", name: "Editorial", desc: "Revista e storytelling", preview: "Aa Editorial", style: "font-family: 'Palatino Linotype', Palatino, serif; font-weight: 600;" },
+  { id: "futurista", name: "Futurista", desc: "Sci-fi e tecnologia", preview: "Aa Future", style: "font-family: 'Orbitron', 'Exo 2', sans-serif; font-weight: 600; letter-spacing: 0.06em;" },
+  { id: "handwritten", name: "Handwritten", desc: "Escrita à mão casual", preview: "Aa Hand", style: "font-family: 'Comic Sans MS', 'Segoe Print', cursive; font-weight: 600;" }
+];
+
+let selectedPalette = null;
+let selectedFont = null;
+
+function renderPalettePresets() {
+  const box = $("palettePresets");
+  if (!box) return;
+  box.innerHTML = COLOR_PALETTES.map(p => `
+    <button type="button" class="palette-preset ${selectedPalette?.id === p.id ? "active" : ""}" data-palette="${p.id}">
+      <div class="palette-swatches">${p.colors.map(c => `<span style="background:${c}"></span>`).join("")}</div>
+      <div class="palette-name">${esc(p.name)}</div>
+      <div class="palette-desc">${esc(p.desc)}</div>
+    </button>
+  `).join("");
+  box.querySelectorAll("[data-palette]").forEach(btn => {
+    btn.onclick = () => selectPalette(btn.dataset.palette);
+  });
+}
+
+function renderFontPresets() {
+  const box = $("fontPresets");
+  if (!box) return;
+  box.innerHTML = FONT_PRESETS.map(f => `
+    <button type="button" class="font-preset ${selectedFont?.id === f.id ? "active" : ""}" data-font="${f.id}">
+      <div class="font-preview" style="${f.style}">${esc(f.preview)}</div>
+      <div class="font-name">${esc(f.name)}</div>
+      <div class="font-desc">${esc(f.desc)}</div>
+    </button>
+  `).join("");
+  box.querySelectorAll("[data-font]").forEach(btn => {
+    btn.onclick = () => selectFont(btn.dataset.font);
+  });
+}
+
+function selectPalette(id) {
+  if (selectedPalette?.id === id) {
+    selectedPalette = null;
+  } else {
+    selectedPalette = COLOR_PALETTES.find(p => p.id === id) || null;
+  }
+  renderPalettePresets();
+  updateIdentityTags();
+  syncBrandFromIdentity();
+  updatePreview();
+}
+
+function selectFont(id) {
+  if (selectedFont?.id === id) {
+    selectedFont = null;
+  } else {
+    selectedFont = FONT_PRESETS.find(f => f.id === id) || null;
+  }
+  renderFontPresets();
+  updateIdentityTags();
+  syncBrandFromIdentity();
+  updatePreview();
+}
+
+function updateIdentityTags() {
+  const boxP = $("identitySelectedPalette");
+  const boxF = $("identitySelectedFont");
+  if (boxP) {
+    boxP.innerHTML = selectedPalette
+      ? `<span class="itag palette-tag">${esc(selectedPalette.name)} <button type="button" data-rm="palette" title="Remover">×</button></span>`
+      : "";
+    boxP.querySelectorAll("[data-rm]").forEach(b => {
+      b.onclick = () => {
+        selectedPalette = null;
+        renderPalettePresets();
+        updateIdentityTags();
+        updatePreview();
+      };
+    });
+  }
+  if (boxF) {
+    boxF.innerHTML = selectedFont
+      ? `<span class="itag font-tag">${esc(selectedFont.name)} <button type="button" data-rm="font" title="Remover">×</button></span>`
+      : "";
+    boxF.querySelectorAll("[data-rm]").forEach(b => {
+      b.onclick = () => {
+        selectedFont = null;
+        renderFontPresets();
+        updateIdentityTags();
+        updatePreview();
+      };
+    });
+  }
+}
+
+function getIdentityText() {
+  const parts = [];
+  if (selectedPalette) {
+    const cols = selectedPalette.colors.join(", ");
+    parts.push(`Paleta "${selectedPalette.name}" (${selectedPalette.desc}): cores ${cols}`);
+  }
+  if (selectedFont) {
+    parts.push(`Tipografia "${selectedFont.name}" (${selectedFont.desc})`);
+  }
+  const custom = value("brand");
+  if (custom) parts.push(custom);
+  return parts.join(" | ");
+}
+
+function syncBrandFromIdentity() {
+  // Não sobrescreve o campo de texto — ele fica só para personalização.
+  // A composição final é feita em getIdentityText() no preview.
+}
+
+function initIdentityPresets() {
+  renderPalettePresets();
+  renderFontPresets();
+  updateIdentityTags();
+}
+
 function getCommandHeader() {
   if (mergedList.length) {
     return "/Comando mesclado: " + mergedList.map(c => c.name).join(" + ");
@@ -890,27 +1197,68 @@ function isWritingCommand() {
   return selected && writingCats.includes(selected.cat);
 }
 
+function getCheckedValues(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+}
+
+function getStyleText() {
+  const checked = getCheckedValues("style");
+  const extra = value("styleExtra");
+  const parts = [...checked];
+  if (extra) parts.push(extra);
+  return parts.join(", ");
+}
+
+function getSceneText() {
+  const checked = getCheckedValues("scene");
+  const extra = value("sceneExtra");
+  const parts = [...checked];
+  if (extra) parts.push(extra);
+  return parts.join(", ");
+}
+
 function updatePreview() {
   const lines = [getCommandHeader(), ""];
   const hint = getMergedHint();
   if (hint) lines.push(hint.trim(), "");
 
-  const fields = [
-    ["size", "Tamanho / formato"],
+  // Tamanho
+  const sizeVal = value("size");
+  if (sizeVal) lines.push("Tamanho / formato: " + sizeVal);
+
+  // Identidade visual
+  const identity = getIdentityText();
+  if (identity) lines.push("Marca / identidade: " + identity);
+
+  // Contexto
+  const contextFields = [
     ["objective", "Objetivo"],
     ["audience", "Público-alvo"],
-    ["product", "Produto / serviço"],
-    ["brand", "Marca / identidade"],
-    ["headline", "Texto principal / headline"],
-    ["subtext", "Texto secundário"],
-    ["cta", "CTA / chamada para ação"],
-    ["style", "Estilo visual"],
-    ["scene", "Elementos / cenário"]
+    ["product", "Produto / serviço"]
   ];
-  fields.forEach(([id, label]) => {
+  contextFields.forEach(([id, label]) => {
     const v = value(id);
     if (v) lines.push(label + ": " + v);
   });
+
+  // Mensagens
+  const msgFields = [
+    ["headline", "Texto principal / headline"],
+    ["subtext", "Texto secundário"],
+    ["cta", "CTA / chamada para ação"]
+  ];
+  msgFields.forEach(([id, label]) => {
+    const v = value(id);
+    if (v) lines.push(label + ": " + v);
+  });
+
+  // Estilo visual (checkboxes + extra)
+  const styleText = getStyleText();
+  if (styleText) lines.push("Estilo visual: " + styleText);
+
+  // Elementos / cenário (checkboxes + extra)
+  const sceneText = getSceneText();
+  if (sceneText) lines.push("Elementos / cenário: " + sceneText);
 
   const writing = isWritingCommand();
 
@@ -1052,13 +1400,25 @@ function downloadImage() {
 }
 
 function clearForm() {
-  ["size","objective","audience","product","brand","headline","subtext","cta","style","scene","preserve","notes"].forEach(id => $(id).value = "");
-  ["photoReal","textFaithful","noExtraText","proFinish"].forEach(id => $(id).checked = false);
+  ["size","objective","audience","product","brand","headline","subtext","cta","styleExtra","sceneExtra","preserve","notes"].forEach(id => {
+    const el = $(id);
+    if (el) el.value = "";
+  });
+  ["photoReal","textFaithful","noExtraText","proFinish"].forEach(id => {
+    const el = $(id);
+    if (el) el.checked = false;
+  });
+  document.querySelectorAll('input[name="style"], input[name="scene"]').forEach(el => el.checked = false);
   $("sizeW").value = "";
   $("sizeH").value = "";
   activeSizePreset = null;
   document.querySelectorAll(".size-preset").forEach(b => b.classList.remove("active"));
   $("customSizeBox").classList.remove("open");
+  selectedPalette = null;
+  selectedFont = null;
+  renderPalettePresets();
+  renderFontPresets();
+  updateIdentityTags();
   imageName = "";
   imageBlob = null;
   imageDataUrl = null;
@@ -1112,7 +1472,13 @@ function handleFiles(files) {
 }
 
 /* Event listeners */
-document.querySelectorAll("input:not(#fileInput):not(#sizeW):not(#sizeH), textarea").forEach(el => el.addEventListener("input", updatePreview));
+document.querySelectorAll("input:not(#fileInput):not(#sizeW):not(#sizeH), textarea").forEach(el => {
+  el.addEventListener("input", updatePreview);
+  el.addEventListener("change", updatePreview);
+});
+document.querySelectorAll('input[name="style"], input[name="scene"]').forEach(el => {
+  el.addEventListener("change", updatePreview);
+});
 $("search").addEventListener("input", render);
 
 $("favoritesBtn").onclick = () => {
@@ -1154,6 +1520,7 @@ $("downloadImgBtn").onclick = downloadImage;
 
 bindFile();
 initSizePresets();
+initIdentityPresets();
 categories();
 updatePreview();
 
