@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quando ninguém sabe quem decide o quê | Gislaene Martins</title>
+  <meta name="description" content="Função indefinida gera responsabilidade diluída, gargalo operacional e ausência de um responsável claro por cada ação.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0A1832;
+      --navy-light: #12253F;
+      --navy-card: #1A2F4A;
+      --gold: #C9A84C;
+      --gold-hover: #D4B85C;
+      --off-white: #F3F1E7;
+      --text-muted: #B8C0CC;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--off-white); line-height: 1.7; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,24,50,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      height: 72px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-circle {
+      width: 42px; height: 42px; border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 15px;
+    }
+    .logo-text strong { font-family: 'Playfair Display', serif; font-size: 15px; display: block; }
+    .logo-text span { font-size: 10px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+    .back-link { font-size: 14px; color: var(--gold); }
+    .back-link:hover { text-decoration: underline; }
+
+    .article-hero { padding: 60px 0 40px; border-bottom: 1px solid rgba(201,168,76,0.12); }
+    .article-hero .tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .article-hero h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.25; margin-bottom: 20px; }
+    .article-meta { font-size: 14px; color: var(--text-muted); }
+
+    .article-content { padding: 50px 0 80px; }
+    .article-content p { margin-bottom: 22px; color: var(--text-muted); font-size: 17px; }
+    .article-content h2 { font-size: 24px; color: var(--off-white); margin: 40px 0 18px; }
+    .article-content .highlight {
+      border-left: 3px solid var(--gold); padding: 16px 20px; margin: 32px 0;
+      background: var(--navy-light); font-family: 'Playfair Display', serif;
+      font-size: 18px; font-style: italic; color: var(--off-white);
+    }
+    .article-content ul { margin: 20px 0 28px 20px; color: var(--text-muted); }
+    .article-content ul li { margin-bottom: 10px; }
+
+    .cta-box {
+      background: var(--navy-light); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px; padding: 32px; margin-top: 50px; text-align: center;
+    }
+    .cta-box h3 { font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 24px; }
+    .btn-gold {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      padding: 14px 28px; border-radius: 4px; font-weight: 600; font-size: 15px;
+    }
+    .btn-gold:hover { background: var(--gold-hover); }
+
+    footer {
+      background: #060E1C; padding: 40px 0; border-top: 1px solid rgba(201,168,76,0.15);
+      text-align: center; font-size: 13px; color: var(--text-muted);
+    }
+    footer a { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-circle">GM</div>
+        <div class="logo-text">
+          <strong>Gislaene Martins</strong>
+          <span>Consultoria Jurídica e de Gestão</span>
+        </div>
+      </a>
+      <a href="../index.html" class="back-link">← Voltar para o site</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="article-hero">
+      <div class="container">
+        <div class="tag">Gestão de Clínicas</div>
+        <h1>Quando ninguém sabe quem decide o quê, tudo passa a depender de uma pessoa só</h1>
+        <div class="article-meta">Gislaene Martins • Clínica Sob Controle</div>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <div class="container">
+        <p>Em clínicas pequenas e médias, um padrão se repete com frequência: a operação funciona enquanto o dono está presente. No momento em que ele se ausenta, tudo começa a travar.</p>
+
+        <p>O motivo raramente é falta de competência da equipe. O motivo é <strong>função indefinida</strong>.</p>
+
+        <div class="highlight">
+          Quando ninguém sabe quem decide o quê, tudo passa a depender de uma pessoa só.
+        </div>
+
+        <h2>Os três problemas que a função indefinida gera</h2>
+
+        <p>Função indefinida produz três consequências que se alimentam mutuamente:</p>
+
+        <ul>
+          <li><strong>Responsabilidade diluída</strong> — o erro não tem dono. Quando algo dá errado, a resposta comum é “foi a equipe”.</li>
+          <li><strong>Gargalo operacional</strong> — tudo depende de uma pessoa (geralmente o proprietário ou o gestor).</li>
+          <li><strong>Falta de um responsável claro por cada ação</strong> — a eficiência de toda a equipe cai, porque ninguém sabe até onde pode decidir sozinho.</li>
+        </ul>
+
+        <p>Esses três problemas não são falhas de pessoas. São falhas de desenho organizacional.</p>
+
+        <h2>O que a maioria das clínicas faz de errado</h2>
+
+        <p>A tendência natural é tentar resolver o problema com mais controle: o dono passa a revisar tudo, a aprovar tudo e a estar em tudo. O resultado é o oposto do desejado: o gargalo aumenta e a equipe fica ainda mais dependente.</p>
+
+        <p>Outra tentativa comum é “melhorar a comunicação”. Comunicação ajuda, mas não substitui clareza de função. Sem definição de quem executa e quem aprova, a comunicação vira apenas mais uma reunião.</p>
+
+        <h2>O caminho certo: accountability nominal</h2>
+
+        <p>A solução começa por um princípio simples e poderoso: <strong>accountability</strong>.</p>
+
+        <p>Accountability significa responsabilização nominal e mensurável. Cada função tem um responsável identificável. A falha é rastreada até essa pessoa — não até “a equipe”.</p>
+
+        <p>Quando isso acontece, três coisas mudam:</p>
+
+        <ul>
+          <li>As pessoas sabem exatamente o que se espera delas.</li>
+          <li>O proprietário deixa de ser o único ponto de decisão.</li>
+          <li>A clínica começa a operar com mais previsibilidade.</li>
+        </ul>
+
+        <p>Essa é a base do programa <em>Equipe que Sustenta o Crescimento</em>: mapear funções, definir quem executa e quem aprova, e implementar sem gerar resistência.</p>
+
+        <div class="cta-box">
+          <h3>Quer estruturar a equipe da sua clínica?</h3>
+          <p>Conheça o programa completo de divisão de funções, contratação, integração e organização operacional.</p>
+          <a href="../index.html#servicos" class="btn-gold">Ver soluções</a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <footer>
+    <div class="container">
+      © 2026 Gislaene Martins — Todos os direitos reservados.<br>
+      Site desenvolvido por <a href="https://sigaclinica.com.br" target="_blank">sigaclinica.com.br</a>. Todos os direitos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>
