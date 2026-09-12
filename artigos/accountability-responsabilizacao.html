@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accountability: responsabilização nominal e mensurável | Gislaene Martins</title>
+  <meta name="description" content="Cada função precisa ter um responsável identificável. A falha deve ser rastreada até a pessoa, não até a equipe.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0A1832;
+      --navy-light: #12253F;
+      --navy-card: #1A2F4A;
+      --gold: #C9A84C;
+      --gold-hover: #D4B85C;
+      --off-white: #F3F1E7;
+      --text-muted: #B8C0CC;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--off-white); line-height: 1.7; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,24,50,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      height: 72px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-circle {
+      width: 42px; height: 42px; border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 15px;
+    }
+    .logo-text strong { font-family: 'Playfair Display', serif; font-size: 15px; display: block; }
+    .logo-text span { font-size: 10px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+    .back-link { font-size: 14px; color: var(--gold); }
+    .back-link:hover { text-decoration: underline; }
+
+    .article-hero { padding: 60px 0 40px; border-bottom: 1px solid rgba(201,168,76,0.12); }
+    .article-hero .tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .article-hero h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.25; margin-bottom: 20px; }
+    .article-meta { font-size: 14px; color: var(--text-muted); }
+
+    .article-content { padding: 50px 0 80px; }
+    .article-content p { margin-bottom: 22px; color: var(--text-muted); font-size: 17px; }
+    .article-content h2 { font-size: 24px; color: var(--off-white); margin: 40px 0 18px; }
+    .article-content .highlight {
+      border-left: 3px solid var(--gold); padding: 16px 20px; margin: 32px 0;
+      background: var(--navy-light); font-family: 'Playfair Display', serif;
+      font-size: 18px; font-style: italic; color: var(--off-white);
+    }
+    .article-content ul { margin: 20px 0 28px 20px; color: var(--text-muted); }
+    .article-content ul li { margin-bottom: 10px; }
+
+    .cta-box {
+      background: var(--navy-light); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px; padding: 32px; margin-top: 50px; text-align: center;
+    }
+    .cta-box h3 { font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 24px; }
+    .btn-gold {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      padding: 14px 28px; border-radius: 4px; font-weight: 600; font-size: 15px;
+    }
+    .btn-gold:hover { background: var(--gold-hover); }
+
+    footer {
+      background: #060E1C; padding: 40px 0; border-top: 1px solid rgba(201,168,76,0.15);
+      text-align: center; font-size: 13px; color: var(--text-muted);
+    }
+    footer a { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-circle">GM</div>
+        <div class="logo-text">
+          <strong>Gislaene Martins</strong>
+          <span>Consultoria Jurídica e de Gestão</span>
+        </div>
+      </a>
+      <a href="../index.html" class="back-link">← Voltar para o site</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="article-hero">
+      <div class="container">
+        <div class="tag">RH & Equipe</div>
+        <h1>Accountability: responsabilização nominal e mensurável</h1>
+        <div class="article-meta">Gislaene Martins • Clínica Sob Controle</div>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <div class="container">
+        <p>A palavra accountability aparece com frequência em discussões de gestão. Mas na prática das clínicas, ela quase nunca é aplicada de forma concreta.</p>
+
+        <div class="highlight">
+          Accountability significa responsabilização nominal e mensurável: cada função tem um responsável identificável, e a falha é rastreada até essa pessoa, não até “a equipe”.
+        </div>
+
+        <h2>Por que “a equipe” não resolve</h2>
+
+        <p>Quando um erro acontece e a resposta é “foi a equipe”, duas coisas ocorrem ao mesmo tempo:</p>
+
+        <ul>
+          <li>Ninguém se sente verdadeiramente responsável.</li>
+          <li>O proprietário continua sendo o único que “carrega” o problema.</li>
+        </ul>
+
+        <p>Isso cria um ciclo vicioso: o dono assume mais, a equipe se acomoda mais, e a dependência aumenta.</p>
+
+        <h2>O que muda com accountability real</h2>
+
+        <p>Quando cada função tem um responsável nominal, a dinâmica muda:</p>
+
+        <ul>
+          <li>As pessoas sabem exatamente o limite da sua alçada.</li>
+          <li>Os erros se tornam oportunidades de correção clara, e não de culpa difusa.</li>
+          <li>O proprietário consegue avaliar desempenho de forma objetiva.</li>
+        </ul>
+
+        <p>Accountability não é punição. É clareza.</p>
+
+        <h2>Como aplicar na clínica</h2>
+
+        <p>O primeiro passo é o mapeamento de funções. Em seguida, para cada processo crítico, define-se:</p>
+
+        <ul>
+          <li><strong>Quem executa</strong></li>
+          <li><strong>Quem aprova</strong></li>
+        </ul>
+
+        <p>Exemplos práticos:</p>
+
+        <ul>
+          <li>Contratação de profissional → executa: Gestão/RH | aprova: Sócio(a)</li>
+          <li>Preenchimento de contrato → executa: RH/Financeiro | aprova: Gestão</li>
+          <li>Renovação de alvará → executa: Gestão/Administrativo | aprova: Gestão</li>
+        </ul>
+
+        <p>Essa matriz simples já elimina grande parte da confusão operacional.</p>
+
+        <p>No programa <em>Equipe que Sustenta o Crescimento</em>, esse é um dos pilares centrais: transformar a cultura de “todo mundo faz um pouco de tudo” em uma estrutura com responsabilidades claras e mensuráveis.</p>
+
+        <div class="cta-box">
+          <h3>Quer implementar accountability na sua clínica?</h3>
+          <p>Conheça o treinamento completo de divisão de funções e organização de equipe.</p>
+          <a href="../index.html#servicos" class="btn-gold">Ver soluções</a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <footer>
+    <div class="container">
+      © 2026 Gislaene Martins — Todos os direitos reservados.<br>
+      Site desenvolvido por <a href="https://sigaclinica.com.br" target="_blank">sigaclinica.com.br</a>. Todos os direitos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>
