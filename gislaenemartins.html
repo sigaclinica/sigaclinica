@@ -605,76 +605,63 @@
       color: var(--text-muted);
     }
 
-    /* ========== ARTIGOS ========== */
-    .articles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 28px;
-    }
+      <!-- ==================== ARTIGOS ==================== -->
+  <section class="about" id="artigos">
+    <div class="container">
+      <div class="section-header">
+        <div class="tag">Conteúdo</div>
+        <h2>Artigos e Insights</h2>
+        <p>Reflexões práticas sobre gestão, equipe e crescimento de clínicas.</p>
+      </div>
 
-    .article-card {
-      background: var(--navy-light);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(201, 168, 76, 0.12);
-      transition: all 0.3s ease;
-    }
+      <div class="articles-grid">
+        <article class="article-card">
+          <div class="article-img">
+            <div>
+              <strong>🖼 IMAGEM DO ARTIGO</strong>
+              800×500px • JPG/WebP
+            </div>
+          </div>
+          <div class="article-body">
+            <div class="date">Gestão de Clínicas</div>
+            <h4>Quando ninguém sabe quem decide o quê</h4>
+            <p>Função indefinida gera responsabilidade diluída, gargalo operacional e ausência de um responsável claro por cada ação.</p>
+            <a href="artigos/quando-ninguem-sabe-quem-decide.html">Ler artigo →</a>
+          </div>
+        </article>
 
-    .article-card:hover {
-      border-color: rgba(201, 168, 76, 0.4);
-      transform: translateY(-4px);
-    }
+        <article class="article-card">
+          <div class="article-img">
+            <div>
+              <strong>🖼 IMAGEM DO ARTIGO</strong>
+              800×500px • JPG/WebP
+            </div>
+          </div>
+          <div class="article-body">
+            <div class="date">RH & Equipe</div>
+            <h4>Accountability: responsabilização nominal e mensurável</h4>
+            <p>Cada função precisa ter um responsável identificável. A falha deve ser rastreada até a pessoa, não até “a equipe”.</p>
+            <a href="artigos/accountability-responsabilizacao.html">Ler artigo →</a>
+          </div>
+        </article>
 
-    .article-img {
-      aspect-ratio: 16/10;
-      background: var(--navy-card);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 13px;
-      text-align: center;
-      padding: 16px;
-    }
-
-    .article-img strong {
-      color: var(--gold);
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .article-body {
-      padding: 24px;
-    }
-
-    .article-body .date {
-      font-size: 12px;
-      color: var(--gold);
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    }
-
-    .article-body h4 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: var(--off-white);
-    }
-
-    .article-body p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    .article-body a {
-      font-size: 14px;
-      color: var(--gold);
-      font-weight: 500;
-    }
-
-    .article-body a:hover {
-      text-decoration: underline;
-    }
+        <article class="article-card">
+          <div class="article-img">
+            <div>
+              <strong>🖼 IMAGEM DO ARTIGO</strong>
+              800×500px • JPG/WebP
+            </div>
+          </div>
+          <div class="article-body">
+            <div class="date">Estrutura</div>
+            <h4>Como implementar divisão de funções sem gerar resistência</h4>
+            <p>Reunião de alinhamento, documento de ciência, revisão trimestral e escalonamento claro são os quatro passos essenciais.</p>
+            <a href="artigos/como-implementar-divisao-de-funcoes.html">Ler artigo →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
     /* ========== FOOTER ========== */
     footer {
