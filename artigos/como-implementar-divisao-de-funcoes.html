@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como implementar divisão de funções sem gerar resistência | Gislaene Martins</title>
+  <meta name="description" content="Reunião de alinhamento, documento de ciência, revisão trimestral e escalonamento claro: os quatro passos para implementar sem resistência.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0A1832;
+      --navy-light: #12253F;
+      --navy-card: #1A2F4A;
+      --gold: #C9A84C;
+      --gold-hover: #D4B85C;
+      --off-white: #F3F1E7;
+      --text-muted: #B8C0CC;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--off-white); line-height: 1.7; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,24,50,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      height: 72px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-circle {
+      width: 42px; height: 42px; border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 15px;
+    }
+    .logo-text strong { font-family: 'Playfair Display', serif; font-size: 15px; display: block; }
+    .logo-text span { font-size: 10px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+    .back-link { font-size: 14px; color: var(--gold); }
+    .back-link:hover { text-decoration: underline; }
+
+    .article-hero { padding: 60px 0 40px; border-bottom: 1px solid rgba(201,168,76,0.12); }
+    .article-hero .tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .article-hero h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.25; margin-bottom: 20px; }
+    .article-meta { font-size: 14px; color: var(--text-muted); }
+
+    .article-content { padding: 50px 0 80px; }
+    .article-content p { margin-bottom: 22px; color: var(--text-muted); font-size: 17px; }
+    .article-content h2 { font-size: 24px; color: var(--off-white); margin: 40px 0 18px; }
+    .article-content .highlight {
+      border-left: 3px solid var(--gold); padding: 16px 20px; margin: 32px 0;
+      background: var(--navy-light); font-family: 'Playfair Display', serif;
+      font-size: 18px; font-style: italic; color: var(--off-white);
+    }
+    .article-content ul, .article-content ol { margin: 20px 0 28px 20px; color: var(--text-muted); }
+    .article-content li { margin-bottom: 12px; }
+    .article-content strong { color: var(--off-white); }
+
+    .cta-box {
+      background: var(--navy-light); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px; padding: 32px; margin-top: 50px; text-align: center;
+    }
+    .cta-box h3 { font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 24px; }
+    .btn-gold {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      padding: 14px 28px; border-radius: 4px; font-weight: 600; font-size: 15px;
+    }
+    .btn-gold:hover { background: var(--gold-hover); }
+
+    footer {
+      background: #060E1C; padding: 40px 0; border-top: 1px solid rgba(201,168,76,0.15);
+      text-align: center; font-size: 13px; color: var(--text-muted);
+    }
+    footer a { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-circle">GM</div>
+        <div class="logo-text">
+          <strong>Gislaene Martins</strong>
+          <span>Consultoria Jurídica e de Gestão</span>
+        </div>
+      </a>
+      <a href="../index.html" class="back-link">← Voltar para o site</a>
+    </div>
+  </header>
+
+  <article>
+    <div class="article-hero">
+      <div class="container">
+        <div class="tag">Estrutura</div>
+        <h1>Como implementar divisão de funções sem gerar resistência</h1>
+        <div class="article-meta">Gislaene Martins • Clínica Sob Controle</div>
+      </div>
+    </div>
+
+    <div class="article-content">
+      <div class="container">
+        <p>Mapear funções é a parte técnica. Implementar sem gerar resistência é a parte humana — e geralmente a mais delicada.</p>
+
+        <p>Muitos gestores fazem o mapeamento correto e depois impõem as mudanças por comunicado. O resultado costuma ser oposição silenciosa ou adesão apenas formal.</p>
+
+        <div class="highlight">
+          A forma como a divisão de funções é apresentada determina se a equipe vai abraçar ou sabotar a mudança.
+        </div>
+
+        <h2>Os quatro passos para implementar sem resistência</h2>
+
+        <ol>
+          <li>
+            <strong>Reunião de alinhamento coletiva</strong><br>
+            Apresente o mapeamento. Não imponha por comunicado. Quando as pessoas participam da conversa, a chance de adesão aumenta significativamente.
+          </li>
+          <li>
+            <strong>Documento assinado por função</strong><br>
+            Crie um termo de ciência de atribuições (mesmo informal) com data. Isso formaliza o entendimento e evita o “eu não sabia”.
+          </li>
+          <li>
+            <strong>Revisão trimestral</strong><br>
+            A função muda conforme a clínica cresce. Formalizar a revisão evita o descompasso entre a prática do dia a dia e o que está no contrato ou no combinado.
+          </li>
+          <li>
+            <strong>Escalonamento claro</strong><br>
+            Cada colaborador precisa saber o que decide sozinho e o que leva à gestão. Sem isso, a tendência é escalar tudo — ou não escalar nada.
+          </li>
+        </ol>
+
+        <h2>O erro mais comum</h2>
+
+        <p>O erro mais frequente é tratar a divisão de funções como um evento único. Na verdade, ela é um processo contínuo. Clínicas que crescem mudam de tamanho, de complexidade e de necessidade. O mapeamento de hoje pode não servir daqui a seis meses.</p>
+
+        <p>Por isso a revisão trimestral não é burocracia — é manutenção da estrutura.</p>
+
+        <h2>O resultado esperado</h2>
+
+        <p>Quando esses quatro passos são seguidos, a clínica ganha:</p>
+
+        <ul>
+          <li>Clareza operacional</li>
+          <li>Redução de gargalos</li>
+          <li>Maior autonomia da equipe</li>
+          <li>Menos sobrecarga do proprietário</li>
+        </ul>
+
+        <p>Esse é exatamente o objetivo do Módulo 1 do programa <em>Equipe que Sustenta o Crescimento</em>: não apenas dividir funções, mas implementar de forma que a equipe aceite e sustente a mudança.</p>
+
+        <div class="cta-box">
+          <h3>Quer aplicar isso na sua clínica?</h3>
+          <p>O programa completo cobre divisão de funções, contratação, integração, contratos e organização operacional.</p>
+          <a href="../index.html#servicos" class="btn-gold">Ver soluções</a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <footer>
+    <div class="container">
+      © 2026 Gislaene Martins — Todos os direitos reservados.<br>
+      Site desenvolvido por <a href="https://sigaclinica.com.br" target="_blank">sigaclinica.com.br</a>. Todos os direitos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>
