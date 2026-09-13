@@ -100,6 +100,13 @@
     }
     .logo span { color: var(--gold); }
 
+
+	.logo-img {
+  height: 42px;        /* altura do logo no desktop */
+  width: auto;
+  display: block;
+}  
+
     .nav {
       display: flex;
       align-items: center;
@@ -616,7 +623,13 @@
   }
 }
 
-	  
+
+	  /* No celular deixa logo um pouco menor */
+@media (max-width: 768px) {
+  .logo-img {
+    height: 34px;
+  }
+}
 	  
   </style>
 </head>
@@ -625,13 +638,14 @@
   <!-- HEADER -->
   <header class="header" id="header">
     <div class="container header-inner">
-      <a href="#" class="logo">Gislaene <span>Martins</span></a>
+      <!-- <a href="#" class="logo">Gislaene <span>Martins</span></a> -->
+	<a href="#" class="logo"> <img src="assets/logo-gislaene.png" alt="Gislaene Martins" class="logo-img"> </a>
 
       <nav class="nav" id="mainNav">
         <a href="#inicio">Início</a>
-	<a href="#experiencia">Experiência</a>
-        <a href="#servicos">Serviços</a>
-        <a href="#trabalho">Trabalho</a>
+		<a href="#servicos">Serviços</a>
+		<a href="#experiencia">Experiência</a>
+        <a href="#cases">Cases</a>
         <a href="#contato">Contato</a>
       </nav>
 
@@ -698,14 +712,14 @@
            <img src="assets/foto-gislaene-01.png" alt="Gislaene Martins"> 
         </div>
         <div class="section-content reveal">
-          <h3>Gislaene Martins <span class="accent">Consultoria Jurídica e de Gestão para Clínicas</span></h3>
+          <h3>Consultoria <span class="accent"> Jurídica e de Gestão</span> para Clínicas</h3>
           
 			 
           <p>Ajudo donos de clínicas a saírem da sobrecarga operacional e construírem uma estrutura que sustenta o crescimento sem depender exclusivamente do proprietário.</p>
           
           <div class="highlight">
             “Comigo, donos de clínicas transformam uma operação sobrecarregada e dependente do proprietário em uma clínica mais lucrativa, estruturada e sob controle.”
-          </div>
+          </div><br>
 
           <p>Através de um método claro — do diagnóstico à estruturação completa — trabalho a divisão de funções, contratação, integração, contratos e organização do dia a dia, para que a clínica cresça com accountability real e autonomia da equipe.</p>
 
@@ -730,7 +744,7 @@
           <!-- <img src="assets/foto-gislaine-02.webp" alt="Gislaene em ação"> -->
         </div>
         <div class="section-content reveal">
-          <h3>Da operação sobrecarregada para a <span class="accent">clínica sob controle</span></h3>
+          <h3>Com Mais de <span class="accent"> 15 anos experiência</span> </h3>na área da saúde
           <p>
             Através de metodologias práticas (Escada de Produtos de Gestão Lucrativa e o programa Equipe que Sustenta o Crescimento), Gislaene ajuda proprietários de clínicas a saírem do “apagamento de incêndios” diário e construírem uma operação que cresce de forma saudável.
           </p>
@@ -743,7 +757,7 @@
   </section>
 
   <!-- PRESENÇA ATIVA -->
-  <section class="section">
+  <section class="section" id="cases">
     <div class="container">
       <div class="section-grid">
         <div class="section-img reveal">
@@ -768,7 +782,7 @@
   </section>
 
   <!-- CAROUSEL -->
-  <section class="carousel-section" id="trabalho">
+  <section class="carousel-section">
     <div class="container">
       <div class="carousel-wrapper reveal">
         <button class="carousel-btn prev" id="prevBtn" aria-label="Anterior">←</button>
