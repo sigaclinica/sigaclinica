@@ -553,31 +553,55 @@
 
 
 		.name-badge {
-		    left: 16px;
-		    bottom: 16px;
-		    right: 16px;               /* ocupa quase a largura */
-		    padding: 14px 18px;
-		    border-radius: 8px;
-		  }
-		
-		  .name-badge h2 {
-		    font-size: 1.15rem;        /* bem menor */
-		    margin-bottom: 2px;
-		  }
-		
-		  .name-badge p {
-		    font-size: 0.8rem;
-		  }
+    left: 12px;
+    bottom: 12px;
+    right: auto;                 /* não estica mais */
+    max-width: 70%;              /* não ocupa a foto inteira */
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .name-badge h2 {
+    font-size: 0.95rem;          /* bem menor */
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+
+  .name-badge p {
+    font-size: 0.72rem;
+    line-height: 1.3;
+  }
 
 
-			{
-			  .cover-wrapper:hover .cover-img,
-			  .section-img:hover img {
-			    transform: none !important;
-			  }
-		
-    }
 
+/* Efeito especial de imagem só no celular */
+  .section-img,
+  .cover-wrapper {
+    overflow: hidden;
+  }
+
+  .section-img img,
+  .cover-img {
+    transform: scale(1.08) translateY(20px);
+    opacity: 0;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.9s ease;
+  }
+
+  .section-img.reveal.active img,
+  .cover-wrapper.reveal.active .cover-img {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  /* Desativa o hover de zoom no celular */
+  .cover-wrapper:hover .cover-img,
+  .section-img:hover img {
+    transform: none !important;
+  }
+}
+
+	  
 	  
   </style>
 </head>
@@ -850,11 +874,12 @@ const observer = new IntersectionObserver((entries) => {
     }
   });
 }, {
-  threshold: 0.12,          // aparece um pouco antes
-  rootMargin: '0px 0px -40px 0px'  // ajuda no celular
+  threshold: 0.15,
+  rootMargin: '0px 0px -30px 0px'
 });
 
 reveals.forEach(el => observer.observe(el));
+	  
 
     // Carousel
     const track = document.getElementById('carouselTrack');
