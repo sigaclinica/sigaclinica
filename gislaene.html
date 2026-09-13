@@ -51,8 +51,8 @@
     /* ========== ANIMAÇÕES ========== */
     .reveal {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .reveal.active {
       opacity: 1;
@@ -550,7 +550,35 @@
       .hero-title { font-size: 2.15rem; }
       .footer-grid { grid-template-columns: 1fr; gap: 36px; }
       .connect-inner { flex-direction: column; text-align: center; }
+
+
+		.name-badge {
+		    left: 16px;
+		    bottom: 16px;
+		    right: 16px;               /* ocupa quase a largura */
+		    padding: 14px 18px;
+		    border-radius: 8px;
+		  }
+		
+		  .name-badge h2 {
+		    font-size: 1.15rem;        /* bem menor */
+		    margin-bottom: 2px;
+		  }
+		
+		  .name-badge p {
+		    font-size: 0.8rem;
+		  }
+
+
+			{
+			  .cover-wrapper:hover .cover-img,
+			  .section-img:hover img {
+			    transform: none !important;
+			  }
+		
     }
+
+	  
   </style>
 </head>
 <body>
@@ -812,16 +840,21 @@
       });
     });
 
-    // Reveal on scroll
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.15 });
-    reveals.forEach(el => observer.observe(el));
+    // Reveal on scroll (melhorado para celular)
+const reveals = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, {
+  threshold: 0.12,          // aparece um pouco antes
+  rootMargin: '0px 0px -40px 0px'  // ajuda no celular
+});
+
+reveals.forEach(el => observer.observe(el));
 
     // Carousel
     const track = document.getElementById('carouselTrack');
