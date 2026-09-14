@@ -675,17 +675,21 @@
   position: relative;
   max-width: 1100px;
   margin: 0 auto;
+  overflow: hidden;          /* ← overflow aqui */
+  padding: 0 10px;
 }
 
 .testimonials-track {
   display: flex;
   gap: 28px;
   transition: transform 0.5s ease;
-  overflow: hidden;
+  /* sem overflow aqui */
 }
 
 .testimonial-card {
+  width: calc(33.333% - 19px);
   min-width: calc(33.333% - 19px);
+  max-width: calc(33.333% - 19px);
   background: var(--navy-card);
   border-radius: 14px;
   overflow: hidden;
@@ -792,7 +796,9 @@
 /* Responsivo Depoimentos */
 @media (max-width: 980px) {
   .testimonial-card {
+    width: calc(50% - 14px);
     min-width: calc(50% - 14px);
+    max-width: calc(50% - 14px);
   }
 }
 
@@ -801,8 +807,10 @@
     padding: 70px 0 80px;
   }
 
-  .testimonial-card {
+ .testimonial-card {
+    width: 100%;
     min-width: 100%;
+    max-width: 100%;
   }
 
   .testimonials-btn.prev { left: 8px; }
