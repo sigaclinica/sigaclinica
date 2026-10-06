@@ -88,7 +88,7 @@
 <script>
   let recognition = null;
   let gravando = false;
-  let textoFinal = '';
+  let textoFinal = '';   // texto já confirmado (nunca é apagado)
 
   const textarea = document.getElementById('texto');
   const statusEl = document.getElementById('status');
@@ -109,14 +109,16 @@
       return;
     }
 
+    // Se já existir texto no campo (de uma gravação anterior), continua de onde parou
+    textoFinal = textarea.value.trim();
+    if (textoFinal && !textoFinal.endsWith(' ')) {
+      textoFinal += ' ';
+    }
+
     recognition = new SpeechRecognition();
     recognition.lang = 'pt-BR';
     recognition.continuous = true;
     recognition.interimResults = true;
-
-    // Guarda o que já está escrito
-    textoFinal = textarea.value.trim();
-    if (textoFinal && !textoFinal.endsWith(' ')) textoFinal += ' ';
 
     recognition.onstart = () => {
       gravando = true;
@@ -128,33 +130,45 @@
 
     recognition.onresult = (event) => {
       let interim = '';
-      let final = '';
 
+      // Percorre apenas os resultados novos desta sessão
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const t = event.results[i][0].transcript;
+        const transcript = event.results[i][0].transcript;
+
         if (event.results[i].isFinal) {
-          final += t + ' ';
+          // Resultado confirmado → adiciona permanentemente
+          textoFinal += transcript + ' ';
         } else {
-          interim += t;
+          // Resultado temporário (ainda falando)
+          interim += transcript;
         }
       }
 
-      textarea.value = textoFinal + final + interim;
+      // Mostra: texto já confirmado + o que está sendo falado agora
+      textarea.value = textoFinal + interim;
       textarea.scrollTop = textarea.scrollHeight;
     };
 
     recognition.onerror = (event) => {
-      console.error(event.error);
+      console.error('Erro:', event.error);
       if (event.error === 'not-allowed') {
         alert('Permissão de microfone negada. Permita o acesso ao microfone nesta página.');
       }
-      parar();
+      // Não chama parar() em erros de "no-speech" para não interromper
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        parar();
+      }
     };
 
     recognition.onend = () => {
-      // Se ainda estiver marcado como gravando, reinicia (alguns navegadores param após silêncio)
+      // Se o usuário ainda quer continuar gravando, reinicia automaticamente
+      // sem apagar o textoFinal
       if (gravando) {
-        try { recognition.start(); } catch(e) {}
+        try {
+          recognition.start();
+        } catch (e) {
+          // já está rodando
+        }
       }
     };
 
@@ -168,6 +182,7 @@
   function parar() {
     gravando = false;
     if (recognition) {
+      recognition.onend = null; // impede reinício automático
       recognition.stop();
       recognition = null;
     }
@@ -175,7 +190,9 @@
     btnGravar.classList.remove('gravando');
     statusEl.textContent = 'Gravação parada';
     statusEl.className = 'parado';
-    textarea.value = textarea.value.trim();
+
+    // Limpa espaços extras no final
+    textarea.value = textoFinal.trim();
   }
 
   function enviarParaSistema() {
@@ -185,24 +202,21 @@
       return;
     }
 
-    // Envia o texto para a janela que abriu este popup
     if (window.opener && !window.opener.closed) {
       window.opener.postMessage({
         tipo: 'TRANSCRICAO_SIGA',
         texto: texto
-      }, '*');   // o Apps Script valida a origem no lado dele
+      }, '*');
 
       statusEl.textContent = 'Texto enviado com sucesso!';
       statusEl.className = 'parado';
 
-      // Fecha o popup após 1 segundo
       setTimeout(() => window.close(), 900);
     } else {
       alert('Não foi possível encontrar a janela do sistema. Feche este popup e tente novamente.');
     }
   }
 
-  // Aviso se a página for aberta diretamente (sem ser popup)
   window.addEventListener('load', () => {
     if (!window.opener) {
       statusEl.textContent = 'Abra esta página pelo botão do Módulo Clínico';
