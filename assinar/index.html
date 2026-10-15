@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Assinar Termo — SIGA Clínica</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #e8e8e8;
+    color: #1a1a1a;
+    padding-bottom: 280px;
+  }
+  #doc { padding: 12px; }
+  .bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 3px solid #1a5f9e;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    padding: 12px 16px 16px;
+    max-height: 55vh;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  .bar h3 { font-size: 15px; color: #1a5f9e; margin-bottom: 10px; }
+  .chk { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; font-size: 14px; }
+  .chk input { width: 22px; height: 22px; margin-top: 2px; }
+  input.nome {
+    width: 100%; padding: 12px; font-size: 16px;
+    border: 1.5px solid #ccc; border-radius: 8px; margin-bottom: 8px;
+  }
+  .canvas-wrap {
+    border: 1.5px solid #ccc; border-radius: 8px;
+    background: #fff; margin-bottom: 6px; overflow: hidden;
+  }
+  #canvas { width: 100%; height: 120px; display: block; touch-action: none; }
+  .btns { display: flex; gap: 10px; margin-top: 8px; }
+  .btns button {
+    flex: 1; padding: 14px; font-size: 16px; font-weight: 600;
+    border: none; border-radius: 8px; cursor: pointer;
+  }
+  #btnLimpar { background: #f0f0f0; color: #444; }
+  #btnAssinar { background: #1a5f9e; color: #fff; }
+  #btnAssinar:disabled { background: #aaa; }
+  .msg { margin-top: 8px; text-align: center; font-size: 14px; min-height: 20px; }
+  .msg.erro { color: #c00; }
+  #sucesso {
+    display: none; position: fixed; inset: 0;
+    background: #f5f7fa; z-index: 200; padding: 40px 20px; text-align: center;
+  }
+  #sucesso .card {
+    max-width: 420px; margin: 0 auto; background: #fff;
+    border-radius: 12px; padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.1);
+  }
+  #erroBox {
+    display: none; max-width: 480px; margin: 40px auto; padding: 24px;
+    background: #fff; border-radius: 12px; text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div id="erroBox">
+    <h2 style="color:#c00;margin-bottom:12px;">Nao foi possivel carregar o termo</h2>
+    <p id="erroMsg" style="color:#444;"></p>
+    <p style="color:#888;font-size:13px;margin-top:12px;">Verifique se o sistema do consultorio esta aberto e tente novamente.</p>
+  </div>
+
+  <div id="doc"><p style="padding:20px;text-align:center;">Carregando termo...</p></div>
+
+  <div class="bar" id="barra" style="display:none;">
+    <h3>Assinar Termo de Consentimento</h3>
+    <label class="chk">
+      <input type="checkbox" id="chk">
+      <span>Li e compreendi integralmente o Termo de Consentimento Livre e Esclarecido e concordo com todos os seus termos.</span>
+    </label>
+    <input type="text" id="nome" class="nome" placeholder="Digite seu nome completo" autocomplete="name">
+    <div class="canvas-wrap"><canvas id="canvas"></canvas></div>
+    <div style="font-size:12px;color:#666;margin-bottom:6px;">Desenhe sua assinatura acima</div>
+    <div class="btns">
+      <button type="button" id="btnLimpar">Limpar</button>
+      <button type="button" id="btnAssinar" disabled>Assinar Documento</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div id="sucesso">
+    <div class="card">
+      <div style="font-size:48px;margin-bottom:12px;">&#10004;</div>
+      <h2 style="color:#2e7d32;margin-bottom:12px;">Documento assinado com sucesso!</h2>
+      <p style="color:#444;margin-bottom:16px;">Uma copia sera baixada neste aparelho.</p>
+      <button type="button" id="btnBaixar" style="padding:12px 20px;font-size:15px;background:#1a5f9e;color:#fff;border:none;border-radius:8px;">Baixar copia</button>
+      <p style="color:#888;font-size:12px;margin-top:16px;">Voce ja pode fechar esta pagina.</p>
+    </div>
+  </div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var TOKEN = (params.get('token') || '').trim();
+  var SERVER = (params.get('server') || '').trim().replace(/\/$/, '');
+
+  var canvas, ctx, desenhando = false, temRubrica = false;
+  var htmlAssinado = null;
+
+  function mostrarErro(txt) {
+    document.getElementById('doc').style.display = 'none';
+    document.getElementById('barra').style.display = 'none';
+    document.getElementById('erroBox').style.display = 'block';
+    document.getElementById('erroMsg').textContent = txt || 'Erro desconhecido';
+  }
+
+  if (!TOKEN || !SERVER) {
+    mostrarErro('Link incompleto. Solicite um novo link ao consultorio.');
+    return;
+  }
+
+  // So aceita http/https
+  if (!/^https?:\/\//i.test(SERVER)) {
+    mostrarErro('Servidor invalido no link.');
+    return;
+  }
+
+  async function carregar() {
+    try {
+      var r = await fetch(SERVER + '/api/termo?token=' + encodeURIComponent(TOKEN));
+      var data = await r.json();
+      if (!data.success) {
+        mostrarErro(data.message || 'Termo nao encontrado');
+        return;
+      }
+      if (data.status && String(data.status).toUpperCase() === 'ASSINADO') {
+        document.getElementById('doc').innerHTML = '<p style="padding:20px;text-align:center;">Este termo ja foi assinado.</p>';
+        return;
+      }
+      var iframe = document.createElement('iframe');
+      iframe.style.cssText = 'width:100%;min-height:70vh;border:1px solid #ccc;border-radius:8px;background:#fff;';
+      iframe.srcdoc = data.html;
+      document.getElementById('doc').innerHTML = '';
+      document.getElementById('doc').appendChild(iframe);
+      document.getElementById('barra').style.display = 'block';
+      if (data.nomePaciente) document.getElementById('nome').value = data.nomePaciente;
+      initCanvas();
+    } catch (e) {
+      mostrarErro('Nao foi possivel conectar ao consultorio. O sistema pode estar fechado.');
+    }
+  }
+
+  function initCanvas() {
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    var ratio = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+
+    canvas.addEventListener('mousedown', function (e) {
+      desenhando = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY);
+    });
+    canvas.addEventListener('mousemove', function (e) {
+      if (!desenhando) return;
+      ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); temRubrica = true; atualizar();
+    });
+    canvas.addEventListener('mouseup', function () { desenhando = false; });
+    canvas.addEventListener('mouseleave', function () { desenhando = false; });
+
+    canvas.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      var t = e.touches[0]; var r = canvas.getBoundingClientRect();
+      desenhando = true; ctx.beginPath();
+      ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+      if (!desenhando) return;
+      var t = e.touches[0]; var r = canvas.getBoundingClientRect();
+      ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke(); temRubrica = true; atualizar();
+    }, { passive: false });
+    canvas.addEventListener('touchend', function () { desenhando = false; });
+  }
+
+  function atualizar() {
+    var ok = document.getElementById('chk').checked &&
+      document.getElementById('nome').value.trim().length >= 4 && temRubrica;
+    document.getElementById('btnAssinar').disabled = !ok;
+  }
+
+  document.getElementById('chk').addEventListener('change', atualizar);
+  document.getElementById('nome').addEventListener('input', atualizar);
+  document.getElementById('btnLimpar').onclick = function () {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    temRubrica = false; atualizar();
+  };
+
+  document.getElementById('btnAssinar').onclick = async function () {
+    var nome = document.getElementById('nome').value.trim();
+    var btn = document.getElementById('btnAssinar');
+    btn.disabled = true;
+    document.getElementById('msg').className = 'msg';
+    document.getElementById('msg').textContent = 'Processando...';
+
+    try {
+      var rubrica = canvas.toDataURL('image/png');
+      var r = await fetch(SERVER + '/api/assinar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: TOKEN,
+          nome: nome,
+          rubrica: rubrica,
+          userAgent: navigator.userAgent || ''
+        })
+      });
+      var data = await r.json();
+      if (!data.success) {
+        document.getElementById('msg').className = 'msg erro';
+        document.getElementById('msg').textContent = data.message || 'Erro ao assinar';
+        btn.disabled = false;
+        return;
+      }
+      htmlAssinado = data.html || null;
+      document.getElementById('barra').style.display = 'none';
+      document.getElementById('doc').style.display = 'none';
+      document.getElementById('sucesso').style.display = 'block';
+      if (htmlAssinado) setTimeout(baixarCopia, 600);
+    } catch (e) {
+      document.getElementById('msg').className = 'msg erro';
+      document.getElementById('msg').textContent = 'Falha de conexao. O sistema pode ter sido fechado.';
+      btn.disabled = false;
+    }
+  };
+
+  function baixarCopia() {
+    if (!htmlAssinado) return;
+    var blob = new Blob([htmlAssinado], { type: 'text/html;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Termo_Consentimento_Assinado.html';
+    a.click();
+  }
+  document.getElementById('btnBaixar').onclick = baixarCopia;
+
+  carregar();
+})();
+</script>
+</body>
+</html>
